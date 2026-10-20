@@ -68,41 +68,41 @@ public partial class IdeaLibraryPage : ContentPage
 
     private IdeaFilter BuildFilter()
     {
-        var filter = new IdeaFilter
+        var category = (string?)CategoryFilter.SelectedItem;
+        var primaryControl = (string?)PrimaryControlFilter.SelectedItem;
+        var contentTypeText = (string?)ContentTypeFilter.SelectedItem;
+        var statusText = (string?)StatusFilter.SelectedItem;
+
+        return new IdeaFilter
         {
             Search = string.IsNullOrWhiteSpace(SearchBox.Text) ? null : SearchBox.Text.Trim(),
-            Category = "All".Equals(CategoryFilter.SelectedItem as string, StringComparison.Ordinal) ? null : (CategoryFilter.SelectedItem as string),
-            PrimaryControl = "All".Equals(PrimaryControlFilter.SelectedItem as string, StringComparison.Ordinal) ? null : (PrimaryControlFilter.SelectedItem as string),
+            Category = "All".Equals(category, StringComparison.Ordinal) ? null : category,
+            PrimaryControl = "All".Equals(primaryControl, StringComparison.Ordinal) ? null : primaryControl,
+            ContentType = contentTypeText switch
+            {
+                "AI Solution" => ContentType.AiSolution,
+                "Use Case Sample" => ContentType.UseCaseSample,
+                "Use Case with AI" => ContentType.UseCaseSample,
+                "Use Case without AI" => ContentType.UseCaseSample,
+                "UI Kit" => ContentType.UiKit,
+                _ => null,
+            },
+            UseCaseSubtype = contentTypeText switch
+            {
+                "Use Case with AI" => UseCaseSubtype.WithAi,
+                "Use Case without AI" => UseCaseSubtype.WithoutAi,
+                _ => null,
+            },
+            Status = statusText switch
+            {
+                "Planned" => IdeaStatus.Planned,
+                "In progress" => IdeaStatus.InProgress,
+                "Under review" => IdeaStatus.UnderReview,
+                "Completed" => IdeaStatus.Completed,
+                "Published" => IdeaStatus.Published,
+                _ => null,
+            },
         };
-
-        filter.ContentType = ContentTypeFilter.SelectedItem as string switch
-        {
-            "AI Solution" => ContentType.AiSolution,
-            "Use Case Sample" => ContentType.UseCaseSample,
-            "Use Case with AI" => ContentType.UseCaseSample,
-            "Use Case without AI" => ContentType.UseCaseSample,
-            "UI Kit" => ContentType.UiKit,
-            _ => null,
-        };
-
-        filter.UseCaseSubtype = ContentTypeFilter.SelectedItem as string switch
-        {
-            "Use Case with AI" => UseCaseSubtype.WithAi,
-            "Use Case without AI" => UseCaseSubtype.WithoutAi,
-            _ => null,
-        };
-
-        filter.Status = StatusFilter.SelectedItem as string switch
-        {
-            "Planned" => IdeaStatus.Planned,
-            "In progress" => IdeaStatus.InProgress,
-            "Under review" => IdeaStatus.UnderReview,
-            "Completed" => IdeaStatus.Completed,
-            "Published" => IdeaStatus.Published,
-            _ => null,
-        };
-
-        return filter;
     }
 
     private async void OnAddClicked(object? sender, EventArgs e)

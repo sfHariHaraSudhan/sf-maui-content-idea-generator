@@ -1,7 +1,5 @@
 using System.Reflection;
 
-using System.Reflection;
-
 namespace IdeaGenerator.Maui;
 
 /// <summary>Application identity and version metadata.</summary>
@@ -21,7 +19,7 @@ public static class AppInfo
             var metadata = Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyMetadataAttribute>();
             foreach (var attribute in metadata)
             {
-                if (attribute.Key == "BuildNumber")
+                if (attribute.Key == "BuildNumber" && !string.IsNullOrWhiteSpace(attribute.Value))
                 {
                     return attribute.Value;
                 }

@@ -5,116 +5,218 @@
              Title="Idea Library"
              BackgroundColor="{StaticResource AppBackground}">
 
-    <Grid>
-        <ScrollView>
-            <VerticalStackLayout Spacing="12" Padding="12,12,12,24">
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto" Padding="20,16,20,10">
 
-                <!-- Toolbar row -->
-                <HorizontalStackLayout Spacing="8">
-                    <Border BackgroundColor="{StaticResource Surface}"
-                            Stroke="{StaticResource Border}" StrokeThickness="1"
-                            StrokeShape="RoundRectangle 12" Padding="12,0" HorizontalOptions="FillAndExpand">
-                        <Entry x:Name="SearchBox"
-                               Placeholder="Search ideas…"
-                               BackgroundColor="Transparent"
-                               TextColor="{StaticResource TextPrimary}"
-                               FontSize="14"
-                               Keyboard="Text"
-                               Completed="OnSearchCompleted" />
-                    </Border>
-                    <Button Text="＋ Add Idea"
-                            BackgroundColor="{StaticResource Primary}"
-                            TextColor="White"
-                            CornerRadius="12"
-                            Padding="14,10"
-                            MinimumHeightRequest="44"
-                            Clicked="OnAddClicked" />
-                </HorizontalStackLayout>
-
-                <!-- Filters -->
-                <HorizontalStackLayout Spacing="8">
-                    <Picker x:Name="ContentTypeFilter" Title="Content type" SelectedIndex="0"
-                            FontSize="13" TextColor="{StaticResource TextSecondary}"
-                            SelectedIndexChanged="OnFilterChanged" />
-                    <Picker x:Name="CategoryFilter" Title="Category" SelectedIndex="0"
-                            FontSize="13" TextColor="{StaticResource TextSecondary}"
-                            SelectedIndexChanged="OnFilterChanged" />
-                    <Picker x:Name="StatusFilter" Title="Status" SelectedIndex="0"
-                            FontSize="13" TextColor="{StaticResource TextSecondary}"
-                            SelectedIndexChanged="OnFilterChanged" />
-                    <Picker x:Name="PrimaryControlFilter" Title="Primary control" SelectedIndex="0"
-                            FontSize="13" TextColor="{StaticResource TextSecondary}"
-                            SelectedIndexChanged="OnFilterChanged" />
-                </HorizontalStackLayout>
-
-                <Label x:Name="VersionLabel" FontSize="11" TextColor="{StaticResource TextMuted}" />
-
-                <!-- Idea list -->
-                <CollectionView x:Name="IdeasList"
-                                 SelectionMode="Single"
-                                 SelectionChanged="OnSelectionChanged">
-                    <CollectionView.EmptyView>
-                        <VerticalStackLayout Spacing="8" Padding="24,48" HorizontalOptions="Fill" VerticalOptions="Center">
-                            <Label Text="🗂" FontSize="40" HorizontalOptions="Center" />
-                            <Label x:Name="EmptyMessage"
-                                   Text="The Idea Library is empty. Tap “Add Idea” to create the first one."
-                                   FontSize="15"
-                                   TextColor="{StaticResource TextSecondary}"
-                                   HorizontalOptions="Center"
-                                   HorizontalTextAlignment="Center" />
-                        </VerticalStackLayout>
-                    </CollectionView.EmptyView>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Border BackgroundColor="{StaticResource Surface}"
-                                    Stroke="{StaticResource Border}" StrokeThickness="1"
-                                    StrokeShape="RoundRectangle 16"
-                                    Padding="14,12" Margin="0,0,0,8">
-                                <VerticalStackLayout Spacing="6">
-                                    <HorizontalStackLayout Spacing="8">
-                                        <Label Text="{Binding Path}"
-                                               FontSize="11"
-                                               TextColor="White"
-                                               BackgroundColor="{StaticResource PrimaryDark}"
-                                               Padding="8,3"
-                                               VerticalOptions="Center" />
-                                        <Label Text="{Binding Category}"
-                                               FontSize="11"
-                                               TextColor="{StaticResource TextMuted}"
-                                               VerticalOptions="Center"
-                                               LineBreakMode="TailTruncation" />
-                                        <Label Text="{Binding Status}"
-                                               FontSize="11"
-                                               TextColor="{StaticResource TextMuted}"
-                                               VerticalOptions="Center"
-                                               LineBreakMode="TailTruncation" />
-                                        <Label Text="📌"
-                                               FontSize="13"
-                                               IsVisible="{Binding IsPinned}"
-                                               VerticalOptions="Center" />
-                                    </HorizontalStackLayout>
-                                    <Label Text="{Binding Title}"
-                                           FontSize="15"
-                                           FontAttributes="SemiBold"
-                                           TextColor="{StaticResource TextPrimary}" />
-                                    <Label Text="{Binding PrimaryControl}"
-                                           FontSize="12"
-                                           TextColor="{StaticResource TextSecondary}" />
-                                </VerticalStackLayout>
-                                <Border.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Text="View details" Clicked="OnViewMenuTapped" />
-                                        <MenuItem Text="Pin / Unpin" Clicked="OnPinMenuTapped" />
-                                        <MenuItem Text="Edit" Clicked="OnEditMenuTapped" />
-                                        <MenuItem Text="Delete" Clicked="OnDeleteMenuTapped" />
-                                    </ContextMenu>
-                                </Border.ContextMenu>
-                            </Border>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-
+        <!-- Header -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto">
+            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                <Label Text="Idea Library"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="{StaticResource TextPrimary}" />
+                <Label Text="Curated Syncfusion MAUI content ideas — use cases, AI solutions, and UI kits."
+                       FontSize="13"
+                       TextColor="{StaticResource TextSecondary}"
+                       LineBreakMode="TailTruncation" />
             </VerticalStackLayout>
-        </ScrollView>
+            <Label x:Name="ResultCountLabel" Grid.Column="1"
+                   Margin="0,0,16,0"
+                   FontSize="13"
+                   TextColor="{StaticResource TextSecondary}"
+                   VerticalOptions="Center" />
+            <Button Grid.Column="2"
+                    Text="＋ Add Idea"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    CornerRadius="12"
+                    Padding="16,10"
+                    MinimumHeightRequest="44"
+                    VerticalOptions="Center"
+                    Clicked="OnAddClicked" />
+        </Grid>
+
+        <!-- Search -->
+        <Border Grid.Row="1" Margin="0,14,0,0"
+                BackgroundColor="{StaticResource Surface}"
+                Stroke="{StaticResource Border}" StrokeThickness="1"
+                StrokeShape="RoundRectangle 12" Padding="12,2">
+            <Entry x:Name="SearchBox"
+                   Placeholder="Search ideas — title, description, problem, keywords"
+                   BackgroundColor="Transparent"
+                   TextColor="{StaticResource TextPrimary}"
+                   FontSize="14"
+                   Keyboard="Text"
+                   SearchButtonPressed="OnSearchPressed"
+                   Completed="OnSearchPressed" />
+        </Border>
+
+        <!-- Filters -->
+        <Grid Grid.Row="2" Margin="0,14,0,0"
+              ColumnDefinitions="*,*,*,*,Auto,Auto"
+              RowDefinitions="Auto,Auto" VerticalOptions="Start">
+            <Label Grid.Row="0" Grid.Column="0" Text="Content type"
+                   FontSize="11" TextColor="{StaticResource TextMuted}" Margin="0,0,12,4" />
+            <Label Grid.Row="0" Grid.Column="1" Text="Category"
+                   FontSize="11" TextColor="{StaticResource TextMuted}" Margin="0,0,12,4" />
+            <Label Grid.Row="0" Grid.Column="2" Text="Status"
+                   FontSize="11" TextColor="{StaticResource TextMuted}" Margin="0,0,12,4" />
+            <Label Grid.Row="0" Grid.Column="3" Text="Primary control"
+                   FontSize="11" TextColor="{StaticResource TextMuted}" Margin="0,0,12,4" />
+            <Label Grid.Row="0" Grid.Column="4" Text="Pinned only"
+                   FontSize="11" TextColor="{StaticResource TextMuted}" Margin="0,0,12,4" />
+
+            <Picker x:Name="ContentTypeFilter" Grid.Row="1" Grid.Column="0" Title="All"
+                    Margin="0,0,12,0"
+                    FontSize="13" TextColor="{StaticResource TextPrimary}"
+                    SelectedIndexChanged="OnFilterChanged" />
+            <Picker x:Name="CategoryFilter" Grid.Row="1" Grid.Column="1" Title="All"
+                    Margin="0,0,12,0"
+                    FontSize="13" TextColor="{StaticResource TextPrimary}"
+                    SelectedIndexChanged="OnFilterChanged" />
+            <Picker x:Name="StatusFilter" Grid.Row="1" Grid.Column="2" Title="All"
+                    Margin="0,0,12,0"
+                    FontSize="13" TextColor="{StaticResource TextPrimary}"
+                    SelectedIndexChanged="OnFilterChanged" />
+            <Picker x:Name="PrimaryControlFilter" Grid.Row="1" Grid.Column="3" Title="All"
+                    Margin="0,0,12,0"
+                    FontSize="13" TextColor="{StaticResource TextPrimary}"
+                    SelectedIndexChanged="OnFilterChanged" />
+            <Switch x:Name="PinnedOnlyToggle" Grid.Row="1" Grid.Column="4"
+                    HorizontalOptions="Start" VerticalOptions="Center"
+                    OnColor="{StaticResource Primary}"
+                    Toggled="OnFilterChanged" />
+            <Button x:Name="ClearFiltersButton" Grid.Row="1" Grid.Column="5"
+                    Text="Clear Filters"
+                    IsVisible="False"
+                    BackgroundColor="{StaticResource PrimarySoft}"
+                    TextColor="{StaticResource PrimaryDark}"
+                    CornerRadius="10"
+                    Padding="12,0"
+                    MinimumHeightRequest="36"
+                    VerticalOptions="Center"
+                    Clicked="OnClearFiltersClicked" />
+        </Grid>
+
+        <!-- Results -->
+        <Grid Grid.Row="3" Margin="0,14,0,0">
+
+            <VerticalStackLayout x:Name="LoadingOverlay" Spacing="8"
+                                 HorizontalOptions="Center" VerticalOptions="Center"
+                                 IsVisible="True">
+                <Label Text="⏳" FontSize="32" HorizontalOptions="Center" />
+                <Label Text="Loading ideas…"
+                       FontSize="15" TextColor="{StaticResource TextSecondary}"
+                       HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout x:Name="FailureOverlay" Spacing="12"
+                                 HorizontalOptions="Center" VerticalOptions="Center"
+                                 IsVisible="False">
+                <Label Text="⚠️" FontSize="32" HorizontalOptions="Center" />
+                <Label x:Name="FailureMessage"
+                       Text="The Idea Library could not be loaded."
+                       FontSize="15" TextColor="{StaticResource Error}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+                <Button Text="Retry"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White"
+                        CornerRadius="12"
+                        Padding="20,10"
+                        MinimumHeightRequest="44"
+                        HorizontalOptions="Center"
+                        Clicked="OnRetryClicked" />
+            </VerticalStackLayout>
+
+            <CollectionView x:Name="IdeasList"
+                            SelectionMode="Single"
+                            SelectionChanged="OnSelectionChanged"
+                            IsVisible="False">
+                <CollectionView.ItemsLayout>
+                    <UniformGridLayout Orientation="Columns"
+                                       ItemsColumnCount="Auto"
+                                       ItemsWidth="480" ItemsHeight="250"
+                                       OrientationThreshold="1.3"
+                                       VerticalItemSpacing="12"
+                                       HorizontalItemSpacing="12" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Spacing="8" Padding="24,48"
+                                         HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label x:Name="EmptyIcon" Text="🗂" FontSize="40" HorizontalOptions="Center" />
+                        <Label x:Name="EmptyMessage"
+                               Text="The Idea Library is empty."
+                               FontSize="15"
+                               TextColor="{StaticResource TextSecondary}"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BackgroundColor="{StaticResource Surface}"
+                                Stroke="{StaticResource Border}" StrokeThickness="1"
+                                StrokeShape="RoundRectangle 16"
+                                Padding="16,14">
+                            <VerticalStackLayout Spacing="8">
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label Text="{Binding Path}"
+                                           FontSize="11"
+                                           TextColor="White"
+                                           BackgroundColor="{StaticResource PrimaryDark}"
+                                           Padding="8,3"
+                                           VerticalOptions="Center" />
+                                    <Label Text="{Binding Category}"
+                                           FontSize="11"
+                                           TextColor="{StaticResource TextMuted}"
+                                           VerticalOptions="Center"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding Status}"
+                                           FontSize="11"
+                                           TextColor="{StaticResource TextMuted}"
+                                           VerticalOptions="Center"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label Text="📌"
+                                           FontSize="13"
+                                           IsVisible="{Binding IsPinned}"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="End" />
+                                </HorizontalStackLayout>
+                                <Label Text="{Binding Title}"
+                                       FontSize="16"
+                                       FontAttributes="SemiBold"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       LineBreakMode="TailTruncation" />
+                                <Label Text="{Binding Description}"
+                                       FontSize="13"
+                                       TextColor="{StaticResource TextSecondary}"
+                                       LineBreakMode="CharacterWrap"
+                                       LineHeight="19" />
+                                <Label Text="{Binding PrimaryControl}"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextMuted}"
+                                       LineBreakMode="TailTruncation"
+                                       Margin="0,2,0,0" />
+                            </VerticalStackLayout>
+                            <Border.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Text="View details" Clicked="OnViewMenuTapped" />
+                                    <MenuItem Text="Pin / Unpin" Clicked="OnPinMenuTapped" />
+                                    <MenuItem Text="Edit" Clicked="OnEditMenuTapped" />
+                                    <MenuItem Text="Delete" Clicked="OnDeleteMenuTapped" />
+                                </ContextMenu>
+                            </Border.ContextMenu>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+        <!-- Footer -->
+        <Label x:Name="VersionLabel" Grid.Row="4"
+               Margin="0,10,0,0"
+               FontSize="11"
+               TextColor="{StaticResource TextMuted}" />
+
     </Grid>
 </ContentPage>

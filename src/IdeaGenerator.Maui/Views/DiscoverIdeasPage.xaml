@@ -5,22 +5,32 @@
              Title="Discover Ideas"
              BackgroundColor="{StaticResource AppBackground}">
 
-    <VerticalStackLayout Spacing="8" Padding="24,48" HorizontalOptions="Center" VerticalOptions="Center">
+    <VerticalStackLayout Spacing="8" Padding="24,48" HorizontalOptions="Center" VerticalOptions="Center" MaximumWidthRequest="520">
         <Label Text="✨" FontSize="40" HorizontalOptions="Center" />
         <Label Text="Discover Ideas"
                FontSize="20"
                FontAttributes="Bold"
                TextColor="{StaticResource TextPrimary}"
                HorizontalOptions="Center" />
-        <Label Text="Generate Ideas and I Have an Idea arrive in Phase 2,"
+        <Label Text="AI-assisted discovery arrives in Phase 2."
                FontSize="15"
                TextColor="{StaticResource TextSecondary}"
                HorizontalOptions="Center"
                HorizontalTextAlignment="Center" />
-        <Label Text="together with AI model configuration in Settings."
-               FontSize="15"
-               TextColor="{StaticResource TextSecondary}"
-               HorizontalOptions="Center"
-               HorizontalTextAlignment="Center" />
+        <Border Margin="0,12,0,0"
+                BackgroundColor="{StaticResource Surface}"
+                Stroke="{StaticResource Border}" StrokeThickness="1"
+                StrokeShape="RoundRectangle 12" Padding="16,12">
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Coming in Phase 2" FontSize="13" FontAttributes="Bold"
+                       TextColor="{StaticResource PrimaryDark}" />
+                <Label Text="• Generate Ideas — AI-generated content ideas from a brief."
+                       FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                <Label Text="• I Have an Idea — turn your own rough idea into a structured content brief."
+                       FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                <Label Text="Both require AI model configuration, which also arrives in Phase 2."
+                       FontSize="12" TextColor="{StaticResource TextMuted}" />
+            </VerticalStackLayout>
+        </Border>
     </VerticalStackLayout>
 </ContentPage>

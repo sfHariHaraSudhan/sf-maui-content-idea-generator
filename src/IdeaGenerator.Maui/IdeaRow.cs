@@ -11,6 +11,7 @@ public sealed class IdeaRow
     public string Category { get; init; } = string.Empty;
     public string Status { get; init; } = string.Empty;
     public string PrimaryControl { get; init; } = string.Empty;
+    public string Description { get; init; } = string.Empty;
     public bool IsPinned { get; init; }
     public bool CanUnpin => IsPinned;
 
@@ -22,6 +23,7 @@ public sealed class IdeaRow
         Category = idea.Category,
         Status = idea.Status.DisplayName(),
         PrimaryControl = idea.PrimaryControl,
+        Description = idea.ShortDescription,
         IsPinned = idea.IsPinned,
     };
 }

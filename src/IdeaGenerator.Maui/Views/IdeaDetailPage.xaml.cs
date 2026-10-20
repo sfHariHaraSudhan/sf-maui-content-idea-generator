@@ -137,6 +137,6 @@ public partial class IdeaDetailPage : ContentPage
 
     private async void OnEditClicked(object? sender, EventArgs e)
     {
-        await Navigation.PushAsync(new IdeaFormPage(_data, _idea.Id));
+        await Navigation.PushModalAsync(new IdeaFormPage(_data, _idea.Id));
     }
 }

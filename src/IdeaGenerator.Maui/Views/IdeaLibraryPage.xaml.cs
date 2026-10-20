@@ -10,6 +10,8 @@ public partial class IdeaLibraryPage : ContentPage
 {
     private readonly IdeaDataService _data;
     private readonly ObservableCollection<IdeaRow> _rows = new();
+    private bool _initialized;
+    private int _totalCount;
 
     private static readonly string[] ContentTypeOptions =
     {
@@ -47,27 +49,114 @@ public partial class IdeaLibraryPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+
+        // Apply filter defaults once, after the page is fully attached.
+        // Constructor-time SelectedIndex is unreliable for Picker items
+        // populated after InitializeComponent on Mac Catalyst; the native
+        // control can surface a non-"All" value on first launch, which
+        // silently hid the seeded ideas.
+        if (!_initialized)
+        {
+            _initialized = true;
+            ApplyUnfilteredDefaults();
+        }
+
         Refresh();
+    }
+
+    private void ApplyUnfilteredDefaults()
+    {
+        ContentTypeFilter.SelectedItem = null;
+        CategoryFilter.SelectedItem = null;
+        StatusFilter.SelectedItem = null;
+        PrimaryControlFilter.SelectedItem = null;
+        PinnedOnlyToggle.IsToggled = false;
+        SearchBox.Text = string.Empty;
+        UpdateClearFiltersVisibility();
     }
 
     private void Refresh()
     {
-        var filter = BuildFilter();
-        var ideas = _data.GetAll(filter);
+        LoadingOverlay.IsVisible = true;
+        FailureOverlay.IsVisible = false;
+        IdeasList.IsVisible = false;
 
-        _rows.Clear();
-        foreach (var idea in ideas)
+        try
         {
-            _rows.Add(IdeaRow.From(idea));
+            var filter = BuildFilter();
+            _totalCount = _data.Count();
+            var ideas = _data.GetAll(filter);
+
+            _rows.Clear();
+            foreach (var idea in ideas)
+            {
+                _rows.Add(IdeaRow.From(idea));
+            }
+
+            UpdateResultCount();
+            UpdateEmptyState(filter);
+            IdeasList.IsVisible = true;
+        }
+        catch (Exception ex)
+        {
+            IdeasList.IsVisible = false;
+            FailureMessage.Text = $"The Idea Library could not be loaded. {ex.Message}";
+            FailureOverlay.IsVisible = true;
+        }
+        finally
+        {
+            LoadingOverlay.IsVisible = false;
+        }
+    }
+
+    private void UpdateResultCount()
+    {
+        var showing = _rows.Count;
+        ResultCountLabel.Text = filterActive()
+            ? $"{showing} of {_totalCount} idea{(showing == 1 ? "" : "s")}"
+            : $"{_totalCount} idea{(_totalCount == 1 ? "" : "s")}";
+
+        bool filterActive() =>
+            !string.IsNullOrWhiteSpace(SearchBox.Text) ||
+            !IsUnselected(ContentTypeFilter) ||
+            !IsUnselected(CategoryFilter) ||
+            !IsUnselected(StatusFilter) ||
+            !IsUnselected(PrimaryControlFilter) ||
+            PinnedOnlyToggle.IsToggled;
+
+        UpdateClearFiltersVisibility();
+    }
+
+    private void UpdateEmptyState(IdeaFilter filter)
+    {
+        if (_rows.Count > 0)
+        {
+            return;
         }
 
-        EmptyMessage.Text = filter.HasFilters
-            ? "No ideas match the current filters."
-            : "The Idea Library is empty. Tap “Add Idea” to create the first one.";
+        if (filter.HasFilters)
+        {
+            EmptyIcon.Text = "🔍";
+            EmptyMessage.Text = "No ideas match the current search or filters. Adjust them or tap Clear Filters.";
+        }
+        else if (_totalCount == 0)
+        {
+            EmptyIcon.Text = "🗂";
+            EmptyMessage.Text = "The Idea Library is empty. Tap “Add Idea” to create the first one.";
+        }
+        else
+        {
+            EmptyIcon.Text = "🔍";
+            EmptyMessage.Text = "No ideas match the current search or filters.";
+        }
     }
+
+    private static bool IsUnselected(Picker picker) =>
+        picker.SelectedIndex < 0 || picker.SelectedItem is null || "All".Equals(picker.SelectedItem as string, StringComparison.Ordinal);
 
     private IdeaFilter BuildFilter()
     {
+        // Null or unselected Picker values are always treated as "All".
         var category = (string?)CategoryFilter.SelectedItem;
         var primaryControl = (string?)PrimaryControlFilter.SelectedItem;
         var contentTypeText = (string?)ContentTypeFilter.SelectedItem;
@@ -102,17 +191,41 @@ public partial class IdeaLibraryPage : ContentPage
                 "Published" => IdeaStatus.Published,
                 _ => null,
             },
+            PinnedOnly = PinnedOnlyToggle.IsToggled ? true : null,
         };
     }
 
-    private async void OnAddClicked(object? sender, EventArgs e)
+    private void UpdateClearFiltersVisibility()
     {
-        await Navigation.PushAsync(new IdeaFormPage(_data));
+        ClearFiltersButton.IsVisible =
+            !string.IsNullOrWhiteSpace(SearchBox.Text) ||
+            !IsUnselected(ContentTypeFilter) ||
+            !IsUnselected(CategoryFilter) ||
+            !IsUnselected(StatusFilter) ||
+            !IsUnselected(PrimaryControlFilter) ||
+            PinnedOnlyToggle.IsToggled;
     }
 
-    private void OnSearchCompleted(object? sender, EventArgs e) => Refresh();
+    private void OnSearchPressed(object? sender, EventArgs e) => Refresh();
 
     private void OnFilterChanged(object? sender, EventArgs e) => Refresh();
+
+    private void OnClearFiltersClicked(object? sender, EventArgs e)
+    {
+        // Setting SelectedItem = null while the handler is attached fires
+        // SelectedIndexChanged again for each Picker; that is harmless
+        // because the subsequent Refresh runs with the cleared state.
+        SearchBox.Text = string.Empty;
+        ApplyUnfilteredDefaults();
+        Refresh();
+    }
+
+    private void OnRetryClicked(object? sender, EventArgs e) => Refresh();
+
+    private void OnAddClicked(object? sender, EventArgs e)
+    {
+        _ = Navigation.PushModalAsync(new IdeaFormPage(_data));
+    }
 
     private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
@@ -158,7 +271,7 @@ public partial class IdeaLibraryPage : ContentPage
     {
         if (TryGetMenuIdeaId(sender, out var id))
         {
-            _ = Navigation.PushAsync(new IdeaFormPage(_data, id));
+            _ = Navigation.PushModalAsync(new IdeaFormPage(_data, id));
         }
     }
 

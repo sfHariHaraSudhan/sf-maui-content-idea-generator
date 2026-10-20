@@ -5,104 +5,171 @@
              Title="Add Idea"
              BackgroundColor="{StaticResource AppBackground}">
 
-    <ScrollView>
-        <VerticalStackLayout Spacing="14" Padding="16,16,16,32">
+    <Grid>
+        <Grid Padding="24,20,24,24"
+              HorizontalOptions="Center" VerticalOptions="Fill"
+              MaximumWidthRequest="860"
+              RowDefinitions="Auto,*,Auto">
 
-            <Label Text="Title *" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-            <Entry x:Name="TitleEntry"
-                   FontSize="15"
-                   TextColor="{StaticResource TextPrimary}"
-                   BackgroundColor="{StaticResource Surface}" />
-
-            <Label Text="Content type" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-            <Picker x:Name="ContentTypePicker" FontSize="15" TextColor="{StaticResource TextPrimary}" />
-
-            <Label Text="Category" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-            <Picker x:Name="CategoryPicker" FontSize="15" TextColor="{StaticResource TextPrimary}" />
-
-            <Label Text="Status" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-            <Picker x:Name="StatusPicker" FontSize="15" TextColor="{StaticResource TextPrimary}" />
-
-            <Label Text="Target customer" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-            <Entry x:Name="TargetCustomerEntry"
-                   FontSize="15"
-                   TextColor="{StaticResource TextPrimary}"
-                   BackgroundColor="{StaticResource Surface}" />
-
-            <Label Text="Customer problem" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-            <Editor x:Name="CustomerProblemBox"
-                    FontSize="14"
-                    TextColor="{StaticResource TextPrimary}"
+            <Border Grid.Row="0"
                     BackgroundColor="{StaticResource Surface}"
-                    AutoSize="TextChanges"
-                    MinimumHeightRequest="64" />
+                    Stroke="{StaticResource Border}" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16" Padding="20,18" Margin="0,0,0,16">
+                <VerticalStackLayout Spacing="4">
+                    <Label x:Name="FormTitleLabel"
+                           Text="Add Idea"
+                           FontSize="22" FontAttributes="Bold"
+                           TextColor="{StaticResource TextPrimary}" />
+                    <Label Text="Fields marked * are required."
+                           FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                </VerticalStackLayout>
+            </Border>
 
-            <Label Text="Short description *" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-            <Editor x:Name="DescriptionBox"
-                    FontSize="14"
-                    TextColor="{StaticResource TextPrimary}"
+            <Border Grid.Row="1"
                     BackgroundColor="{StaticResource Surface}"
-                    AutoSize="TextChanges"
-                    MinimumHeightRequest="64" />
+                    Stroke="{StaticResource Border}" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16" Padding="20,18">
+                <ScrollView>
+                    <VerticalStackLayout Spacing="16">
 
-            <Label Text="Primary Syncfusion control" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-            <Picker x:Name="PrimaryControlPicker" FontSize="15" TextColor="{StaticResource TextPrimary}" />
+                        <!-- Basic information -->
+                        <Label Text="Basic information" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" Margin="0,6,0,2" />
+                        <Label Text="Title *" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                        <Entry x:Name="TitleEntry"
+                               FontSize="15"
+                               TextColor="{StaticResource TextPrimary}"
+                               BackgroundColor="{StaticResource AppBackground}" />
 
-            <Label Text="Supporting controls (comma separated)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-            <Editor x:Name="SupportingControlsBox"
-                    FontSize="14"
-                    TextColor="{StaticResource TextPrimary}"
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="Content type" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                                <Picker x:Name="ContentTypePicker" FontSize="14" TextColor="{StaticResource TextPrimary}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                <Label Text="Category" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                                <Picker x:Name="CategoryPicker" FontSize="14" TextColor="{StaticResource TextPrimary}" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="Status" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                                <Picker x:Name="StatusPicker" FontSize="14" TextColor="{StaticResource TextPrimary}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout x:Name="SubtypeBlock" Grid.Column="1" Spacing="4" IsVisible="False">
+                                <Label Text="Use Case subtype" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                                <Picker x:Name="SubtypePicker" FontSize="14" TextColor="{StaticResource TextPrimary}" />
+                            </VerticalStackLayout>
+                        </Grid>
+
+                        <!-- Customer and value -->
+                        <Label Text="Customer and value" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" Margin="0,6,0,2" />
+                        <Label Text="Target customer" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                        <Entry x:Name="TargetCustomerEntry"
+                               FontSize="15"
+                               TextColor="{StaticResource TextPrimary}"
+                               BackgroundColor="{StaticResource AppBackground}" />
+                        <Label Text="Customer problem" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                        <Editor x:Name="CustomerProblemBox"
+                                FontSize="14"
+                                TextColor="{StaticResource TextPrimary}"
+                                BackgroundColor="{StaticResource AppBackground}"
+                                AutoSize="TextChanges"
+                                MinimumHeightRequest="64" />
+                        <Label Text="Short description *" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                        <Editor x:Name="DescriptionBox"
+                                FontSize="14"
+                                TextColor="{StaticResource TextPrimary}"
+                                BackgroundColor="{StaticResource AppBackground}"
+                                AutoSize="TextChanges"
+                                MinimumHeightRequest="64" />
+
+                        <!-- Syncfusion showcase -->
+                        <Label Text="Syncfusion showcase" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" Margin="0,6,0,2" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="Primary Syncfusion control" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                                <Picker x:Name="PrimaryControlPicker" FontSize="14" TextColor="{StaticResource TextPrimary}" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                <Label Text="Supporting controls (comma separated)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                                <Entry x:Name="SupportingControlsBox"
+                                       FontSize="14"
+                                       TextColor="{StaticResource TextPrimary}"
+                                       BackgroundColor="{StaticResource AppBackground}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                        <Label Text="Verified control features (comma separated)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                        <Entry x:Name="ControlFeaturesBox"
+                               FontSize="14"
+                               TextColor="{StaticResource TextPrimary}"
+                               BackgroundColor="{StaticResource AppBackground}" />
+                        <Label Text="Keywords (comma separated)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                        <Entry x:Name="KeywordsEntry"
+                               FontSize="14"
+                               TextColor="{StaticResource TextPrimary}"
+                               BackgroundColor="{StaticResource AppBackground}" />
+
+                        <!-- Flow -->
+                        <Label Text="Flow" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" Margin="0,6,0,2" />
+                        <Label Text="Workflow summary" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                        <Editor x:Name="WorkflowBox"
+                                FontSize="14"
+                                TextColor="{StaticResource TextPrimary}"
+                                BackgroundColor="{StaticResource AppBackground}"
+                                AutoSize="TextChanges"
+                                MinimumHeightRequest="48" />
+                        <VerticalStackLayout x:Name="AiOperationBlock" Spacing="4" IsVisible="False">
+                            <Label Text="AI operation" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                            <Entry x:Name="AiOperationEntry"
+                                   FontSize="14"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   BackgroundColor="{StaticResource AppBackground}" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout x:Name="ScreenNamesBlock" Spacing="4" IsVisible="False">
+                            <Label Text="Screen names (comma separated, UI Kits)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+                            <Entry x:Name="ScreenNamesEntry"
+                                   FontSize="14"
+                                   TextColor="{StaticResource TextPrimary}"
+                                   BackgroundColor="{StaticResource AppBackground}" />
+                        </VerticalStackLayout>
+
+                        <!-- State -->
+                        <Label Text="State" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource TextPrimary}" Margin="0,6,0,2" />
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Start">
+                            <Switch x:Name="PinnedToggle" OnColor="{StaticResource Primary}" />
+                            <Label Text="Pin this idea (independent of status)"
+                                   FontSize="14" TextColor="{StaticResource TextSecondary}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                    </VerticalStackLayout>
+                </ScrollView>
+            </Border>
+
+            <Border Grid.Row="2" Margin="0,16,0,0"
                     BackgroundColor="{StaticResource Surface}"
-                    AutoSize="TextChanges"
-                    MinimumHeightRequest="48" />
+                    Stroke="{StaticResource Border}" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16" Padding="20,14">
+                <HorizontalStackLayout Spacing="12" HorizontalOptions="End">
+                    <Button Text="Cancel"
+                            BackgroundColor="{StaticResource Surface}"
+                            TextColor="{StaticResource TextPrimary}"
+                            Stroke="{StaticResource Border}" StrokeThickness="1"
+                            CornerRadius="12"
+                            Padding="20,10"
+                            MinimumHeightRequest="44"
+                            Clicked="OnCancelClicked" />
+                    <Button x:Name="SaveButton" Text="Save"
+                            BackgroundColor="{StaticResource Primary}"
+                            TextColor="White"
+                            CornerRadius="12"
+                            Padding="24,10"
+                            MinimumHeightRequest="44"
+                            Clicked="OnSaveClicked" />
+                </HorizontalStackLayout>
+            </Border>
 
-            <Label Text="Control features (comma separated)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-            <Editor x:Name="ControlFeaturesBox"
-                    FontSize="14"
-                    TextColor="{StaticResource TextPrimary}"
-                    BackgroundColor="{StaticResource Surface}"
-                    AutoSize="TextChanges"
-                    MinimumHeightRequest="48" />
-
-            <Label Text="Workflow summary" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-            <Editor x:Name="WorkflowBox"
-                    FontSize="14"
-                    TextColor="{StaticResource TextPrimary}"
-                    BackgroundColor="{StaticResource Surface}"
-                    AutoSize="TextChanges"
-                    MinimumHeightRequest="48" />
-
-            <Label Text="Screen names (comma separated, UI Kits)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-            <Entry x:Name="ScreenNamesEntry"
-                   FontSize="15"
-                   TextColor="{StaticResource TextPrimary}"
-                   BackgroundColor="{StaticResource Surface}" />
-
-            <Label Text="AI operation (AI content types)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-            <Entry x:Name="AiOperationEntry"
-                   FontSize="15"
-                   TextColor="{StaticResource TextPrimary}"
-                   BackgroundColor="{StaticResource Surface}" />
-
-            <Label Text="Keywords (comma separated)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-            <Entry x:Name="KeywordsEntry"
-                   FontSize="15"
-                   TextColor="{StaticResource TextPrimary}"
-                   BackgroundColor="{StaticResource Surface}" />
-
-            <HorizontalStackLayout Spacing="10" HorizontalOptions="Start">
-                <Switch x:Name="PinnedToggle" IsVisible="False" OnColor="{StaticResource Primary}" />
-                <Label x:Name="PinnedLabel" Text="Pin this idea" FontSize="14" TextColor="{StaticResource TextSecondary}" VerticalOptions="Center" />
-            </HorizontalStackLayout>
-
-            <Button Text="Save"
-                    BackgroundColor="{StaticResource Primary}"
-                    TextColor="White"
-                    CornerRadius="12"
-                    MinimumHeightRequest="48"
-                    Margin="0,8,0,0"
-                    Clicked="OnSaveClicked" />
-
-        </VerticalStackLayout>
-    </ScrollView>
+        </Grid>
+    </Grid>
 </ContentPage>

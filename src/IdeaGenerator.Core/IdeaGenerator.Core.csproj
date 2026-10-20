@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
+    <!-- Pin SQLitePCLRaw to a release without the high-severity advisory in 2.1.10/2.1.11 -->
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.14" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="2.1.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Content\sample-ideas.json" />
+    <EmbeddedResource Include="Content\controls.json" />
+  </ItemGroup>
+
+</Project>

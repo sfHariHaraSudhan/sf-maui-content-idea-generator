@@ -1,0 +1,28 @@
+# Build output
+bin/
+obj/
+artifacts/
+TestResults/
+
+# Local user data — must never be committed
+*.sqlite
+*.sqlite-*
+data/
+models.json
+
+# Secrets — must never be committed
+*.env
+*.key
+*.p12
+*.pfx
+appsettings.local.json
+
+# Signing / packaging credentials
+certs/
+provisioning/
+
+# IDE
+.vs/
+.vscode/
+*.user
+.DS_Store

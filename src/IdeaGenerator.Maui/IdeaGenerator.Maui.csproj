@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Windows target is only buildable on Windows; Mac Catalyst on macOS. -->
+    <TargetFrameworks>net10.0-maccatalyst17.0</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">net10.0-windows10.0.19041.0</TargetFrameworks>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <OutputType>Exe</OutputType>
+
+    <!-- Application identity and version metadata -->
+    <ApplicationTitle>Syncfusion Content Idea Generator</ApplicationTitle>
+    <ApplicationId>com.syncfusion.ideagenerator</ApplicationId>
+    <Version>1.0.0</Version>
+    <VersionCode>1</VersionCode>
+    <DisplayVersion>1.0.0</DisplayVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Authors>Syncfusion MAUI Content Team</Authors>
+
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RuntimeIdentifier Condition="$([MSBuild]::IsOSPlatform('osx'))">maccatalyst-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IdeaGenerator.Core\IdeaGenerator.Core.csproj" />
+  </ItemGroup>
+
+</Project>

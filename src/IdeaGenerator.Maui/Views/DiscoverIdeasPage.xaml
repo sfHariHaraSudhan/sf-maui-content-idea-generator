@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="IdeaGenerator.Maui.Views.DiscoverIdeasPage"
+             Title="Discover Ideas"
+             BackgroundColor="{StaticResource AppBackground}">
+
+    <VerticalStackLayout Spacing="8" Padding="24,48" HorizontalOptions="Center" VerticalOptions="Center">
+        <Label Text="✨" FontSize="40" HorizontalOptions="Center" />
+        <Label Text="Discover Ideas"
+               FontSize="20"
+               FontAttributes="Bold"
+               TextColor="{StaticResource TextPrimary}"
+               HorizontalOptions="Center" />
+        <Label Text="Generate Ideas and I Have an Idea arrive in Phase 2,"
+               FontSize="15"
+               TextColor="{StaticResource TextSecondary}"
+               HorizontalOptions="Center"
+               HorizontalTextAlignment="Center" />
+        <Label Text="together with AI model configuration in Settings."
+               FontSize="15"
+               TextColor="{StaticResource TextSecondary}"
+               HorizontalOptions="Center"
+               HorizontalTextAlignment="Center" />
+    </VerticalStackLayout>
+</ContentPage>

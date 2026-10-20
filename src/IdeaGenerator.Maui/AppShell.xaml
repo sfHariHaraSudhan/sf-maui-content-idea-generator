@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:IdeaGenerator.Maui.Views"
+       x:Class="IdeaGenerator.Maui.AppShell"
+       FlyoutBehavior="Disabled"
+       TabBarBackgroundColor="{StaticResource AppBackground}"
+       Shell.TabBarUnselectedColor="{StaticResource TextMuted}">
+
+    <TabBar Title="Discover">
+        <ShellContent Title="Idea Library" ContentTemplate="{DataTemplate views:IdeaLibraryPage}" />
+        <ShellContent Title="Discover Ideas" ContentTemplate="{DataTemplate views:DiscoverIdeasPage}" />
+    </TabBar>
+</Shell>

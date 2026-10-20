@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="IdeaGenerator.Maui.Views.IdeaDetailPage"
+             Title="Idea"
+             BackgroundColor="{StaticResource AppBackground}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <HorizontalStackLayout Grid.Row="0" Spacing="8" Padding="12,12,12,0">
+            <Button x:Name="PinButton" Text="Pin"
+                    BackgroundColor="{StaticResource PrimarySoft}"
+                    TextColor="{StaticResource PrimaryDark}"
+                    CornerRadius="12"
+                    Padding="14,10"
+                    MinimumHeightRequest="44"
+                    Clicked="OnPinToggleClicked" />
+            <Button Text="Copy Markdown"
+                    BackgroundColor="{StaticResource Surface}"
+                    TextColor="{StaticResource Primary}"
+                    Stroke="{StaticResource Border}" StrokeThickness="1"
+                    CornerRadius="12"
+                    Padding="14,10"
+                    MinimumHeightRequest="44"
+                    Clicked="OnCopyMarkdownClicked" />
+            <Button Text="Edit"
+                    BackgroundColor="{StaticResource Surface}"
+                    TextColor="{StaticResource Primary}"
+                    Stroke="{StaticResource Border}" StrokeThickness="1"
+                    CornerRadius="12"
+                    Padding="14,10"
+                    MinimumHeightRequest="44"
+                    Clicked="OnEditClicked" />
+        </HorizontalStackLayout>
+
+        <Border Grid.Row="1"
+                BackgroundColor="{StaticResource Surface}"
+                Stroke="{StaticResource Border}" StrokeThickness="1"
+                StrokeShape="RoundRectangle 16"
+                Margin="12,12,12,0">
+            <ScrollView>
+                <Label x:Name="Body"
+                       FontFamily="Monospace"
+                       FontSize="13"
+                       TextColor="{StaticResource TextPrimary}"
+                       Padding="16"
+                       LineBreakMode="WordWrap" />
+            </ScrollView>
+        </Border>
+
+    </Grid>
+</ContentPage>

@@ -1,0 +1,307 @@
+{
+  "catalogVersion": "1.0.0",
+  "lastReviewedDate": "2025-11-24",
+  "sourceNote": "Verified against Syncfusion .NET MAUI product documentation. Features marked here are confirmed; anything not listed must be treated as unverified and flagged for review.",
+  "controls": [
+    {
+      "controlName": "DataGrid",
+      "aliases": ["SfDataGrid"],
+      "purpose": "Display and manipulate large tabular datasets with sorting, filtering, grouping, selection, paging, and column-level configuration.",
+      "verifiedFeatures": [
+        "Row and column selection",
+        "Sorting (SortDescriptors)",
+        "Filtering (FilterDescriptors)",
+        "Grouping (GroupDescriptors)",
+        "Paging",
+        "Column types (text, numeric, date, image, custom cell templates)",
+        "Row and column reordering",
+        "Export (PDF/Excel) APIs",
+        "Freeze rows/columns"
+      ],
+      "typicalCustomerOperations": ["Review records", "Find a subset by criteria", "Reorder view", "Select and inspect a record"],
+      "suitableCategories": ["Finance", "Retail", "Logistics", "Healthcare", "Enterprise Operations", "Project Management"],
+      "suitableWorkflows": ["Record review and drill-in", "Report-like exploration", "Master data maintenance"],
+      "usefulSupportingControls": ["DropDownList", "Calendar", "TabView"],
+      "possibleAiAssistedOperations": ["Natural language to filter/sort/group descriptors", "Suggest grouping for a dataset"],
+      "mobileDesignConsiderations": ["Limit visible columns or use column reordering", "Prefer paging on long data", "Keep row height touch-friendly"],
+      "patternsToAvoid": ["Using DataGrid for short lists under ~10 rows", "Displaying AI-generated prose in a grid cell as the main value"],
+      "documentationReference": "https://help.syncfusion.com/maui/datagrid/overview",
+      "lastReviewedDate": "2025-11-24"
+    },
+    {
+      "controlName": "Scheduler",
+      "aliases": ["SfScheduler"],
+      "purpose": "Calendar-style scheduling with appointments, recurrence, and resource-based views for time-based workflows.",
+      "verifiedFeatures": [
+        "Views: Agenda, Day, Week, Work Week, Month, Timeline Day/Week",
+        "Appointment create/update/delete",
+        "Quick appointment add",
+        "Resources (e.g. people, rooms) with resource views",
+        "Appointment drag and resize",
+        "Recurrence and exception dates",
+        "Working hours and holiday configuration"
+      ],
+      "typicalCustomerOperations": ["Book an appointment", "Reschedule an appointment", "See a day/week of bookings"],
+      "suitableCategories": ["Healthcare", "Field Services", "Professional Apps", "Personal Management", "Communication"],
+      "suitableWorkflows": ["Booking", "Dispatch", "Planning", "Timetabling"],
+      "usefulSupportingControls": ["Calendar", "ListView", "Popup"],
+      "possibleAiAssistedOperations": ["Natural language to structured appointment data", "Suggest appointment placement against availability"],
+      "mobileDesignConsiderations": ["Default to Month or Agenda on small screens", "Keep appointment detail in a popup rather than a new page"],
+      "patternsToAvoid": ["Using the Scheduler to display non-time-based lists"],
+      "documentationReference": "https://help.syncfusion.com/maui/scheduler/overview",
+      "lastReviewedDate": "2025-11-24"
+    },
+    {
+      "controlName": "Charts",
+      "aliases": ["SfChart"],
+      "purpose": "Render and interact with chart data: series, axes, annotations, selection, and tooltips.",
+      "verifiedFeatures": [
+        "Series types: column, line, area, pie, donut, bar, spline, scatter, radar, range, stock",
+        "X/Y axis configuration and ranges",
+        "Annotations and range highlighting",
+        "Selection and tooltip behaviors",
+        "Legend and trackball",
+        "Data labels"
+      ],
+      "typicalCustomerOperations": ["Compare values over time", "Highlight a subset", "Inspect a data point"],
+      "suitableCategories": ["Finance", "Retail", "Enterprise Operations", "Logistics", "Healthcare"],
+      "suitableWorkflows": ["Trend review", "KPI review", "What-if comparison"],
+      "usefulSupportingControls": ["DropDownList", "RangeSlider", "TabView"],
+      "possibleAiAssistedOperations": ["Analyze a dataset and propose series, axes, and annotations", "Turn an analysis intent into chart configuration"],
+      "mobileDesignConsiderations": ["Limit series count per screen", "Use tooltips/trackball for value inspection instead of dense data labels"],
+      "patternsToAvoid": ["Showing AI-generated summaries as the only chart content"],
+      "documentationReference": "https://help.syncfusion.com/maui/charts/overview",
+      "lastReviewedDate": "2025-11-24"
+    },
+    {
+      "controlName": "Calendar",
+      "aliases": ["SfCalendar"],
+      "purpose": "Date picking and lightweight month-level appointment display.",
+      "verifiedFeatures": [
+        "Month, Year, and Decade views",
+        "Date selection (single/multiple/range)",
+        "Appointment display on dates",
+        "Custom day views",
+        "First day of week configuration"
+      ],
+      "typicalCustomerOperations": ["Pick a date or date range", "See which days have items"],
+      "suitableCategories": ["Healthcare", "Education", "Personal Management", "Field Services", "Professional Apps"],
+      "suitableWorkflows": ["Date picking for a form", "Lightweight schedule at a glance"],
+      "usefulSupportingControls": ["Scheduler", "DataGrid"],
+      "possibleAiAssistedOperations": [],
+      "mobileDesignConsiderations": ["Prefer over a raw DatePicker when the user benefits from month context"],
+      "patternsToAvoid": ["Using Calendar for full appointment management (use Scheduler)"],
+      "documentationReference": "https://help.syncfusion.com/maui/calendar/overview",
+      "lastReviewedDate": "2025-11-24"
+    },
+    {
+      "controlName": "DropDownList",
+      "aliases": ["SfDropDown", "SfDropDownList"],
+      "purpose": "Single- or multiple-value selection from a list with search and grouping.",
+      "verifiedFeatures": [
+        "Single and multiple selection",
+        "Search/filter within the list",
+        "Grouped data",
+        "Custom item templates",
+        "Async data loading"
+      ],
+      "typicalCustomerOperations": ["Choose one value", "Choose many values", "Search a long list"],
+      "suitableCategories": ["Finance", "Retail", "Logistics", "Healthcare", "Productivity"],
+      "suitableWorkflows": ["Filtering setup", "Selection steps in a form", "Picking related records"],
+      "usefulSupportingControls": ["DataGrid", "Scheduler", "ListView"],
+      "possibleAiAssistedOperations": [],
+      "mobileDesignConsiderations": ["Use search for lists over ~20 items", "Keep displayed text short"],
+      "patternsToAvoid": ["Using it for 2-3 obvious options (a segmented control or toggle is clearer)"],
+      "documentationReference": "https://help.syncfusion.com/maui/dropdownlist/overview",
+      "lastReviewedDate": "2025-11-24"
+    },
+    {
+      "controlName": "Rich Text Editor",
+      "aliases": ["SfRichTextEditor", "RTF Editor"],
+      "purpose": "Create and edit rich text documents with formatting operations.",
+      "verifiedFeatures": [
+        "Text formatting (bold, italic, underline, color, alignment)",
+        "Bullets and numbered lists",
+        "Tables and images",
+        "Undo/redo",
+        "RTF/HTML/DOCX loading and saving",
+        "Find and replace"
+      ],
+      "typicalCustomerOperations": ["Compose a formatted document", "Apply formatting to a selection"],
+      "suitableCategories": ["Communication", "Professional Apps", "Education", "Productivity"],
+      "suitableWorkflows": ["Report composition", "Message composition", "Documentation notes"],
+      "usefulSupportingControls": ["Popup"],
+      "possibleAiAssistedOperations": ["Convert user instructions into supported formatting operations applied to a selection"],
+      "mobileDesignConsiderations": ["Expose the most-used format actions in a bottom bar", "Defer full toolbar behind an expandable view"],
+      "patternsToAvoid": ["Using it as a plain multi-line textbox"],
+      "documentationReference": "https://help.syncfusion.com/maui/richtexteditor/overview",
+      "lastReviewedDate": "2025-11-24"
+    },
+    {
+      "controlName": "PdfViewer",
+      "aliases": ["SfPdfViewer"],
+      "purpose": "View, annotate, and interact with PDF documents.",
+      "verifiedFeatures": [
+        "PDF rendering and navigation",
+        "Zoom (page and fit modes)",
+        "Annotations: highlight, underline, freehand, text, stamp, arrow",
+        "Find text",
+        "Bookmarks outline",
+        "Page labels and thumbnails"
+      ],
+      "typicalCustomerOperations": ["Read a document", "Highlight and note", "Find a passage"],
+      "suitableCategories": ["Professional Apps", "Healthcare", "Logistics", "Field Services", "Education"],
+      "suitableWorkflows": ["Document review", "Annotated inspection", "Reference lookup on site"],
+      "usefulSupportingControls": ["Popup", "ListView"],
+      "possibleAiAssistedOperations": ["Create annotation objects (positions + type) to apply to a document"],
+      "mobileDesignConsiderations": ["Default to fit-width zoom", "Keep annotation palette compact"],
+      "patternsToAvoid": ["Using PdfViewer to render app-generated content that could be native views"],
+      "documentationReference": "https://help.syncfusion.com/maui/pdfviewer/overview",
+      "lastReviewedDate": "2025-11-24"
+    },
+    {
+      "controlName": "ListView",
+      "aliases": ["SfListView"],
+      "purpose": "Flexible list display with templates, grouping, and pull-to-refresh.",
+      "verifiedFeatures": [
+        "Item templates and grouped templates",
+        "Selection modes (single/multiple)",
+        "Pull to refresh",
+        "Swipe actions",
+        "Empty view",
+        "Sticky headers"
+      ],
+      "typicalCustomerOperations": ["Browse items", "Select an item", "Refresh data", "Quick actions on a row"],
+      "suitableCategories": ["Field Services", "Retail", "Logistics", "Personal Management", "Communication"],
+      "suitableWorkflows": ["Daily task lists", "Record lists with actions", "Master list of an app"],
+      "usefulSupportingControls": ["TabView", "Map", "CheckBox", "Toast"],
+      "possibleAiAssistedOperations": [],
+      "mobileDesignConsiderations": ["Keep rows 44pt+ for touch", "Use sticky headers for long grouped lists"],
+      "patternsToAvoid": ["Using SfListView for wide tabular data (use DataGrid)"],
+      "documentationReference": "https://help.syncfusion.com/maui/listview/overview",
+      "lastReviewedDate": "2025-11-24"
+    },
+    {
+      "controlName": "Map",
+      "aliases": ["SfMapView", "Map"],
+      "purpose": "Display geographic content with pins, routes, and overlays.",
+      "verifiedFeatures": [
+        "Pin/marker overlays",
+        "Polyline routes",
+        "Zoom and pan gestures",
+        "Multiple map providers (e.g. Google Maps, Bing Maps, ArcGIS)",
+        "Info windows on pins",
+        "Current location display"
+      ],
+      "typicalCustomerOperations": ["See where things are", "View a route", "Inspect a location"],
+      "suitableCategories": ["Field Services", "Logistics", "Retail", "Professional Apps"],
+      "suitableWorkflows": ["Route planning", "Visit map", "Fleet or branch map"],
+      "usefulSupportingControls": ["ListView", "Popup"],
+      "possibleAiAssistedOperations": [],
+      "mobileDesignConsiderations": ["Provide a list alternative for users who prefer scanning over panning", "Cache tiles where offline matters"],
+      "patternsToAvoid": ["Embedding a map when a static address list answers the question"],
+      "documentationReference": "https://help.syncfusion.com/maui/map/overview",
+      "lastReviewedDate": "2025-11-24"
+    },
+    {
+      "controlName": "TabView",
+      "aliases": ["SfTabView"],
+      "purpose": "Switch between grouped screens with tab or bottom-bar styles.",
+      "verifiedFeatures": [
+        "Tab and bottom-bar display modes",
+        "Icon and text items",
+        "Nested navigation content per tab",
+        "Tab badges"
+      ],
+      "typicalCustomerOperations": ["Switch between app areas", "Return to a previous area"],
+      "suitableCategories": ["Retail", "Logistics", "Field Services", "Professional Apps", "Productivity"],
+      "suitableWorkflows": ["App area navigation", "Grouping related screens"],
+      "usefulSupportingControls": ["ListView", "DataGrid", "Charts"],
+      "possibleAiAssistedOperations": [],
+      "mobileDesignConsiderations": ["Limit top-level tabs to 3-5", "Keep tab labels short"],
+      "patternsToAvoid": ["Using TabView to navigate deep hierarchies"],
+      "documentationReference": "https://help.syncfusion.com/maui/tabview/overview",
+      "lastReviewedDate": "2025-11-24"
+    },
+    {
+      "controlName": "Popup",
+      "aliases": ["Popup Service"],
+      "purpose": "Show focused content over the current page: dialogs, details, and focused forms.",
+      "verifiedFeatures": [
+        "Custom content popups",
+        "Center, full-screen, and page-relative positioning",
+        "Close on outside tap or button",
+        "Popup-to-popup interaction"
+      ],
+      "typicalCustomerOperations": ["Review a detail without leaving context", "Confirm an action", "Fill a short form"],
+      "suitableCategories": ["Finance", "Retail", "Healthcare", "Field Services", "Communication"],
+      "suitableWorkflows": ["Detail on demand", "Confirmation steps", "Focused data entry"],
+      "usefulSupportingControls": ["Scheduler", "DataGrid", "Charts"],
+      "possibleAiAssistedOperations": [],
+      "mobileDesignConsiderations": ["Keep popups to one primary action", "Full-screen popups for content-heavy detail"],
+      "patternsToAvoid": ["Nesting more than two popup levels", "Using a popup to display AI output as the main value of an idea"],
+      "documentationReference": "https://help.syncfusion.com/maui/popup/overview",
+      "lastReviewedDate": "2025-11-24"
+    },
+    {
+      "controlName": "ProgressBar",
+      "aliases": ["SfProgressBar", "RadialGauge", "LinearGauge"],
+      "purpose": "Show progress, completion, or a single measured value as a bar or gauge.",
+      "verifiedFeatures": [
+        "Linear and circular progress styles",
+        "Radial gauge with range, needle, and labels",
+        "Linear gauge with ranges and pointers",
+        "Color mapping by value range"
+      ],
+      "typicalCustomerOperations": ["See how far along a task is", "See a single KPI value"],
+      "suitableCategories": ["Logistics", "Retail", "Project Management", "Healthcare", "Education"],
+      "suitableWorkflows": ["Shift progress", "Completion tracking", "Single-KPI at a glance"],
+      "usefulSupportingControls": ["ListView", "TabView"],
+      "possibleAiAssistedOperations": [],
+      "mobileDesignConsiderations": ["Pair with a text label stating what the value means"],
+      "patternsToAvoid": ["Showing many independent KPIs as a wall of gauges (use a chart or list)"],
+      "documentationReference": "https://help.syncfusion.com/maui/gauge/overview",
+      "lastReviewedDate": "2025-11-24"
+    },
+    {
+      "controlName": "RangeSlider",
+      "aliases": ["SfRangeSlider"],
+      "purpose": "Let the user select a value or a range along a scale.",
+      "verifiedFeatures": [
+        "Single and range (two-thumb) selection",
+        "Discrete steps and snapping",
+        "Custom minimum/maximum",
+        "Orientation"
+      ],
+      "typicalCustomerOperations": ["Narrow a review window", "Set a threshold", "Adjust a parameter"],
+      "suitableCategories": ["Retail", "Finance", "Logistics", "Developer Tools"],
+      "suitableWorkflows": ["Filtering by period or amount", "Threshold setting"],
+      "usefulSupportingControls": ["Charts", "DataGrid"],
+      "possibleAiAssistedOperations": [],
+      "mobileDesignConsiderations": ["Show the selected values as text alongside the slider"],
+      "patternsToAvoid": ["Using it for exact data entry (a textbox is better for precise values)"],
+      "documentationReference": "https://help.syncfusion.com/maui/rangeslider/overview",
+      "lastReviewedDate": "2025-11-24"
+    },
+    {
+      "controlName": "Toast",
+      "aliases": ["SfToast"],
+      "purpose": "Show brief, non-blocking feedback messages.",
+      "verifiedFeatures": [
+        "Auto-dismiss with configurable duration",
+        "Icon and message templates",
+        "Tap and swipe to dismiss",
+        "Light and dark appearances"
+      ],
+      "typicalCustomerOperations": ["Confirm an action quietly", "See a lightweight warning"],
+      "suitableCategories": ["Retail", "Field Services", "Logistics", "Personal Management", "Communication"],
+      "suitableWorkflows": ["Action feedback", "Soft validation notices"],
+      "usefulSupportingControls": ["ListView", "DataGrid"],
+      "possibleAiAssistedOperations": [],
+      "mobileDesignConsiderations": ["Keep messages to one line where possible", "Use for non-critical feedback only"],
+      "patternsToAvoid": ["Using toasts for errors that require a response"],
+      "documentationReference": "https://help.syncfusion.com/maui/toast/overview",
+      "lastReviewedDate": "2025-11-24"
+    }
+  ]
+}

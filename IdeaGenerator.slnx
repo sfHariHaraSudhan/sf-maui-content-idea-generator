@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/IdeaGenerator.Core/IdeaGenerator.Core.csproj" />
+    <Project Path="src/IdeaGenerator.Maui/IdeaGenerator.Maui.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/IdeaGenerator.Core.Tests/IdeaGenerator.Core.Tests.csproj" />
+  </Folder>
+</Solution>

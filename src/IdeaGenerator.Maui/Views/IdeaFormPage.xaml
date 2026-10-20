@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="IdeaGenerator.Maui.Views.IdeaFormPage"
+             Title="Add Idea"
+             BackgroundColor="{StaticResource AppBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="14" Padding="16,16,16,32">
+
+            <Label Text="Title *" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+            <Entry x:Name="TitleEntry"
+                   FontSize="15"
+                   TextColor="{StaticResource TextPrimary}"
+                   BackgroundColor="{StaticResource Surface}" />
+
+            <Label Text="Content type" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+            <Picker x:Name="ContentTypePicker" FontSize="15" TextColor="{StaticResource TextPrimary}" />
+
+            <Label Text="Category" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+            <Picker x:Name="CategoryPicker" FontSize="15" TextColor="{StaticResource TextPrimary}" />
+
+            <Label Text="Status" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+            <Picker x:Name="StatusPicker" FontSize="15" TextColor="{StaticResource TextPrimary}" />
+
+            <Label Text="Target customer" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+            <Entry x:Name="TargetCustomerEntry"
+                   FontSize="15"
+                   TextColor="{StaticResource TextPrimary}"
+                   BackgroundColor="{StaticResource Surface}" />
+
+            <Label Text="Customer problem" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+            <Editor x:Name="CustomerProblemBox"
+                    FontSize="14"
+                    TextColor="{StaticResource TextPrimary}"
+                    BackgroundColor="{StaticResource Surface}"
+                    AutoSize="TextChanges"
+                    MinimumHeightRequest="64" />
+
+            <Label Text="Short description *" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+            <Editor x:Name="DescriptionBox"
+                    FontSize="14"
+                    TextColor="{StaticResource TextPrimary}"
+                    BackgroundColor="{StaticResource Surface}"
+                    AutoSize="TextChanges"
+                    MinimumHeightRequest="64" />
+
+            <Label Text="Primary Syncfusion control" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+            <Picker x:Name="PrimaryControlPicker" FontSize="15" TextColor="{StaticResource TextPrimary}" />
+
+            <Label Text="Supporting controls (comma separated)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+            <Editor x:Name="SupportingControlsBox"
+                    FontSize="14"
+                    TextColor="{StaticResource TextPrimary}"
+                    BackgroundColor="{StaticResource Surface}"
+                    AutoSize="TextChanges"
+                    MinimumHeightRequest="48" />
+
+            <Label Text="Control features (comma separated)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+            <Editor x:Name="ControlFeaturesBox"
+                    FontSize="14"
+                    TextColor="{StaticResource TextPrimary}"
+                    BackgroundColor="{StaticResource Surface}"
+                    AutoSize="TextChanges"
+                    MinimumHeightRequest="48" />
+
+            <Label Text="Workflow summary" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+            <Editor x:Name="WorkflowBox"
+                    FontSize="14"
+                    TextColor="{StaticResource TextPrimary}"
+                    BackgroundColor="{StaticResource Surface}"
+                    AutoSize="TextChanges"
+                    MinimumHeightRequest="48" />
+
+            <Label Text="Screen names (comma separated, UI Kits)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+            <Entry x:Name="ScreenNamesEntry"
+                   FontSize="15"
+                   TextColor="{StaticResource TextPrimary}"
+                   BackgroundColor="{StaticResource Surface}" />
+
+            <Label Text="AI operation (AI content types)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+            <Entry x:Name="AiOperationEntry"
+                   FontSize="15"
+                   TextColor="{StaticResource TextPrimary}"
+                   BackgroundColor="{StaticResource Surface}" />
+
+            <Label Text="Keywords (comma separated)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+            <Entry x:Name="KeywordsEntry"
+                   FontSize="15"
+                   TextColor="{StaticResource TextPrimary}"
+                   BackgroundColor="{StaticResource Surface}" />
+
+            <Label Text="Reference URL (optional)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
+            <Entry x:Name="ReferenceUrlEntry"
+                   FontSize="15"
+                   TextColor="{StaticResource TextPrimary}"
+                   BackgroundColor="{StaticResource Surface}"
+                   Keyboard="Url" />
+
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Start">
+                <Switch x:Name="PinnedToggle" IsVisible="False" OnColor="{StaticResource Primary}" />
+                <Label x:Name="PinnedLabel" Text="Pin this idea" FontSize="14" TextColor="{StaticResource TextSecondary}" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <Button Text="Save"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    CornerRadius="12"
+                    MinimumHeightRequest="48"
+                    Margin="0,8,0,0"
+                    Clicked="OnSaveClicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

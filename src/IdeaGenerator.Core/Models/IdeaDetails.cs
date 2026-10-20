@@ -5,7 +5,10 @@ namespace IdeaGenerator.Core.Models;
 
 /// <summary>
 /// Base for the four content-path payloads. Each idea stores exactly one of
-/// these in <see cref="Idea.Details"/> (persisted as JSON).
+/// these in <see cref="Idea.Details"/> (persisted as JSON). The concrete type
+/// is identified by the "kind" polymorphic discriminator written/read by
+/// System.Text.Json; there is no separate Kind property (that would collide
+/// with the discriminator name).
 /// </summary>
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "kind")]
 [JsonDerivedType(typeof(UseCaseWithoutAiDetails), nameof(UseCaseWithoutAiDetails))]
@@ -14,15 +17,11 @@ namespace IdeaGenerator.Core.Models;
 [JsonDerivedType(typeof(UiKitDetails), nameof(UiKitDetails))]
 public abstract class IdeaDetails
 {
-    [JsonPropertyName("kind")]
-    public abstract string Kind { get; }
 }
 
 /// <summary>Use Case Sample without AI. Must never contain AI behavior or terminology.</summary>
 public sealed class UseCaseWithoutAiDetails : IdeaDetails
 {
-    public override string Kind => nameof(UseCaseWithoutAiDetails);
-
     public string DesiredOutcome { get; set; } = string.Empty;
     public string PracticalWorkflow { get; set; } = string.Empty;
     public string Pages { get; set; } = string.Empty;
@@ -35,8 +34,6 @@ public sealed class UseCaseWithoutAiDetails : IdeaDetails
 /// <summary>Use Case Sample with AI. AI must operate on, not merely decorate, the controls.</summary>
 public sealed class UseCaseWithAiDetails : IdeaDetails
 {
-    public override string Kind => nameof(UseCaseWithAiDetails);
-
     public string DesiredOutcome { get; set; } = string.Empty;
     public string PracticalWorkflow { get; set; } = string.Empty;
     public string Pages { get; set; } = string.Empty;
@@ -56,8 +53,6 @@ public sealed class UseCaseWithAiDetails : IdeaDetails
 /// <summary>AI Solution. One focused AI capability around one primary control.</summary>
 public sealed class AiSolutionDetails : IdeaDetails
 {
-    public override string Kind => nameof(AiSolutionDetails);
-
     public string CustomerProblem { get; set; } = string.Empty;
     public string FeaturesEnhanced { get; set; } = string.Empty;
     public string CustomerInput { get; set; } = string.Empty;
@@ -76,8 +71,6 @@ public sealed class AiSolutionDetails : IdeaDetails
 /// <summary>UI Kit. A connected, reusable set of mobile screens.</summary>
 public sealed class UiKitDetails : IdeaDetails
 {
-    public override string Kind => nameof(UiKitDetails);
-
     public string CustomerNeed { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public List<UiKitScreen> Screens { get; set; } = new();
@@ -104,7 +97,12 @@ public static class IdeaDetailsCodec
         Converters = { new JsonStringEnumConverter() },
     };
 
-    public static string ToJson(IdeaDetails details) => JsonSerializer.Serialize(details, details.GetType(), Options);
+    /// <summary>
+    /// Serializes via the polymorphic <see cref="IdeaDetails"/> base so the
+    /// "kind" type discriminator is written. Serializing the concrete type
+    /// would skip the discriminator and break deserialization.
+    /// </summary>
+    public static string ToJson(IdeaDetails details) => JsonSerializer.Serialize<IdeaDetails>(details, Options);
 
     public static IdeaDetails? FromJson(string? json)
     {
@@ -113,15 +111,7 @@ public static class IdeaDetailsCodec
             return null;
         }
 
-        using var doc = JsonDocument.Parse(json);
-        var kind = doc.RootElement.TryGetProperty("kind", out var kindEl) ? kindEl.GetString() : null;
-        return kind switch
-        {
-            nameof(UseCaseWithoutAiDetails) => JsonSerializer.Deserialize<UseCaseWithoutAiDetails>(json, Options),
-            nameof(UseCaseWithAiDetails) => JsonSerializer.Deserialize<UseCaseWithAiDetails>(json, Options),
-            nameof(AiSolutionDetails) => JsonSerializer.Deserialize<AiSolutionDetails>(json, Options),
-            nameof(UiKitDetails) => JsonSerializer.Deserialize<UiKitDetails>(json, Options),
-            _ => null,
-        };
+        // STJ reads the "kind" discriminator and returns the concrete type.
+        return JsonSerializer.Deserialize<IdeaDetails>(json, Options);
     }
 }

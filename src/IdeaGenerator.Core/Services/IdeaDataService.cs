@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using IdeaGenerator.Core.Models;
 using Microsoft.Data.Sqlite;
 
@@ -315,7 +316,14 @@ public sealed class IdeaDataService : IDisposable
         using var reader = new StreamReader(stream);
         var json = reader.ReadToEnd();
 
-        var samples = JsonSerializer.Deserialize<List<Idea>>(json)
+        // The embedded sample file is camelCase; deserialize with the matching
+        // naming policy so every field and the polymorphic "kind" details
+        // payload bind. Enums are stored as integers and deserialize natively.
+        var sampleOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        };
+        var samples = JsonSerializer.Deserialize<List<Idea>>(json, sampleOptions)
             ?? throw new InvalidOperationException("sample-ideas.json is empty or invalid.");
 
         var added = 0;
@@ -355,7 +363,7 @@ public sealed class IdeaDataService : IDisposable
         cmd.Parameters.AddWithValue("@AiOperation", idea.AiOperation);
         cmd.Parameters.AddWithValue("@ScreenNames", idea.ScreenNames);
         cmd.Parameters.AddWithValue("@OriginalUserInput", (object?)idea.OriginalUserInput ?? DBNull.Value);
-        cmd.Parameters.AddWithValue("@DetailsJson", (object?)idea.Details is null ? null : IdeaDetailsCodec.ToJson(idea.Details));
+        cmd.Parameters.AddWithValue("@DetailsJson", idea.Details is null ? (object)DBNull.Value : IdeaDetailsCodec.ToJson(idea.Details));
         cmd.Parameters.AddWithValue("@CreatedAt", idea.CreatedAt.ToString("O"));
         cmd.Parameters.AddWithValue("@UpdatedAt", idea.UpdatedAt.ToString("O"));
     }

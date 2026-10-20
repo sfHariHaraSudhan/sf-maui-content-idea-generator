@@ -90,13 +90,6 @@
                    TextColor="{StaticResource TextPrimary}"
                    BackgroundColor="{StaticResource Surface}" />
 
-            <Label Text="Reference URL (optional)" FontSize="13" TextColor="{StaticResource TextSecondary}" />
-            <Entry x:Name="ReferenceUrlEntry"
-                   FontSize="15"
-                   TextColor="{StaticResource TextPrimary}"
-                   BackgroundColor="{StaticResource Surface}"
-                   Keyboard="Url" />
-
             <HorizontalStackLayout Spacing="10" HorizontalOptions="Start">
                 <Switch x:Name="PinnedToggle" IsVisible="False" OnColor="{StaticResource Primary}" />
                 <Label x:Name="PinnedLabel" Text="Pin this idea" FontSize="14" TextColor="{StaticResource TextSecondary}" VerticalOptions="Center" />

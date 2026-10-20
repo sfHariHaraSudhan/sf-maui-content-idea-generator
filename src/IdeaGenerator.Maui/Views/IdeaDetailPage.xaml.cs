@@ -28,35 +28,18 @@ public partial class IdeaDetailPage : ContentPage
         AppendMeta(sb, "Category", _idea.Category);
         AppendMeta(sb, "Status", _idea.Status.DisplayName());
         AppendMeta(sb, "Source", _idea.Source.ToString());
-        if (_idea.CreatedAt is { } created)
-        {
-            AppendMeta(sb, "Created", created.ToString("yyyy-MM-dd"));
-        }
-
+        AppendMeta(sb, "Created", _idea.CreatedAt.ToString("yyyy-MM-dd"));
         AppendMeta(sb, "Primary control", _idea.PrimaryControl);
-        if (_idea.SupportingControls.Count > 0)
-        {
-            AppendMeta(sb, "Supporting controls", string.Join(", ", _idea.SupportingControls));
-        }
-        if (_idea.ControlFeatures.Count > 0)
-        {
-            AppendMeta(sb, "Control features", string.Join(", ", _idea.ControlFeatures));
-        }
+        AppendMeta(sb, "Supporting controls", _idea.SupportingControls);
+        AppendMeta(sb, "Control features", _idea.ControlFeatures);
 
         AppendBlock(sb, "Target customer", _idea.TargetCustomer);
         AppendBlock(sb, "Customer problem", _idea.CustomerProblem);
         AppendBlock(sb, "Description", _idea.ShortDescription);
         AppendBlock(sb, "Workflow summary", _idea.WorkflowSummary);
-        if (_idea.ScreenNames.Count > 0)
-        {
-            AppendBlock(sb, "Screens", string.Join(" → ", _idea.ScreenNames));
-        }
+        AppendBlock(sb, "Screens", _idea.ScreenNames);
         AppendBlock(sb, "AI operation", _idea.AiOperation);
-        if (_idea.Keywords.Count > 0)
-        {
-            AppendBlock(sb, "Keywords", string.Join(", ", _idea.Keywords));
-        }
-        AppendBlock(sb, "Reference URL", _idea.ReferenceUrl);
+        AppendBlock(sb, "Keywords", _idea.Keywords);
 
         switch (_idea.Details)
         {
@@ -74,38 +57,40 @@ public partial class IdeaDetailPage : ContentPage
                 AppendBlock(sb, "Customer input", d.CustomerInput);
                 AppendBlock(sb, "AI operation", d.AiOperation);
                 AppendBlock(sb, "Structured AI output", d.StructuredAiOutput);
-                AppendBlock(sb, "How the output operates the control", d.HowOutputOperatesControl);
+                AppendBlock(sb, "How the output drives the controls", d.HowOutputDrivesControls);
                 AppendBlock(sb, "User review and correction", d.UserReviewAndCorrection);
                 AppendBlock(sb, "Invalid-response handling", d.InvalidResponseHandling);
                 AppendBlock(sb, "Retry or fallback", d.RetryOrFallback);
                 AppendBlock(sb, "Why AI adds customer value", d.WhyAiAddsCustomerValue);
                 AppendBlock(sb, "Why the controls remain essential", d.WhyControlsRemainEssential);
-                AppendBlock(sb, "Implementation scope", d.ImplementationScope);
                 AppendBlock(sb, "Expected effort", d.ExpectedEffort);
                 break;
             case AiSolutionDetails d:
                 AppendBlock(sb, "Customer input", d.CustomerInput);
                 AppendBlock(sb, "AI operation", d.AiOperation);
-                AppendBlock(sb, "Structured AI output", d.StructuredAiOutput);
-                AppendBlock(sb, "How the output is applied in the control", d.HowOutputIsApplied);
+                AppendBlock(sb, "Structured AI output", d.StructuredOutput);
+                AppendBlock(sb, "How the output is applied in the control", d.ApplicationToControl);
+                AppendBlock(sb, "Expected interaction", d.ExpectedInteraction);
                 AppendBlock(sb, "Why AI is useful", d.WhyAiIsUseful);
                 AppendBlock(sb, "Why the control is essential", d.WhyControlIsEssential);
-                AppendBlock(sb, "Minimal workflow", d.MinimalWorkflow);
-                AppendBlock(sb, "Implementation scope", d.ImplementationScope);
+                AppendBlock(sb, "Minimal sample workflow", d.MinimalSampleWorkflow);
                 AppendBlock(sb, "Expected effort", d.ExpectedEffort);
                 break;
             case UiKitDetails d:
                 AppendBlock(sb, "Customer need", d.CustomerNeed);
-                sb.AppendLine();
-                sb.AppendLine("Screens:");
-                foreach (var screen in d.Screens)
+                if (d.Screens.Count > 0)
                 {
-                    sb.AppendLine($"  • {screen.Name} — {screen.Purpose}");
+                    sb.AppendLine();
+                    sb.AppendLine("**Screens**");
+                    sb.AppendLine();
+                    foreach (var screen in d.Screens)
+                    {
+                        sb.AppendLine($"  • {screen.Name} — {screen.Purpose}");
+                    }
                 }
                 AppendBlock(sb, "Navigation flow", d.NavigationFlow);
                 AppendBlock(sb, "Customer reuse value", d.CustomerReuseValue);
                 AppendBlock(sb, "Suggested screen count", d.SuggestedScreenCount.ToString());
-                AppendBlock(sb, "Implementation scope", d.ImplementationScope);
                 AppendBlock(sb, "Expected effort", d.ExpectedEffort);
                 break;
         }
@@ -139,8 +124,8 @@ public partial class IdeaDetailPage : ContentPage
 
     private async void OnCopyMarkdownClicked(object? sender, EventArgs e)
     {
-        await Clipboard.SetTextAsync(Body.Text, CancellationToken.None);
-        await DisplayAlert("Copied", "Idea details copied to clipboard as Markdown.", "OK");
+        await Clipboard.SetTextAsync(Body.Text);
+        await DisplayAlertAsync("Copied", "Idea details copied to clipboard as Markdown.", "OK");
     }
 
     private void OnPinToggleClicked(object? sender, EventArgs e)

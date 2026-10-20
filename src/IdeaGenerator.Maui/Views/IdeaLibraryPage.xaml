@@ -35,16 +35,16 @@
                 <HorizontalStackLayout Spacing="8">
                     <Picker x:Name="ContentTypeFilter" Title="Content type" SelectedIndex="0"
                             FontSize="13" TextColor="{StaticResource TextSecondary}"
-                            ItemTapped="OnFilterChanged" />
+                            SelectedItemChanged="OnFilterChanged" />
                     <Picker x:Name="CategoryFilter" Title="Category" SelectedIndex="0"
                             FontSize="13" TextColor="{StaticResource TextSecondary}"
-                            ItemTapped="OnFilterChanged" />
+                            SelectedItemChanged="OnFilterChanged" />
                     <Picker x:Name="StatusFilter" Title="Status" SelectedIndex="0"
                             FontSize="13" TextColor="{StaticResource TextSecondary}"
-                            ItemTapped="OnFilterChanged" />
+                            SelectedItemChanged="OnFilterChanged" />
                     <Picker x:Name="PrimaryControlFilter" Title="Primary control" SelectedIndex="0"
                             FontSize="13" TextColor="{StaticResource TextSecondary}"
-                            ItemTapped="OnFilterChanged" />
+                            SelectedItemChanged="OnFilterChanged" />
                 </HorizontalStackLayout>
 
                 <Label x:Name="VersionLabel" FontSize="11" TextColor="{StaticResource TextMuted}" />
@@ -104,10 +104,10 @@
                                 </VerticalStackLayout>
                                 <Border.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Text="View details" Value="{Binding Id}" Clicked="OnViewMenuTapped" />
-                                        <MenuItem Text="Pin / Unpin" Value="{Binding Id}" Clicked="OnPinMenuTapped" />
-                                        <MenuItem Text="Edit" Value="{Binding Id}" Clicked="OnEditMenuTapped" />
-                                        <MenuItem Text="Delete" Value="{Binding Id}" Clicked="OnDeleteMenuTapped" />
+                                        <MenuItem Text="View details" Clicked="OnViewMenuTapped" />
+                                        <MenuItem Text="Pin / Unpin" Clicked="OnPinMenuTapped" />
+                                        <MenuItem Text="Edit" Clicked="OnEditMenuTapped" />
+                                        <MenuItem Text="Delete" Clicked="OnDeleteMenuTapped" />
                                     </ContextMenu>
                                 </Border.ContextMenu>
                             </Border>

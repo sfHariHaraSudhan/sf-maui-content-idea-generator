@@ -11,6 +11,19 @@ public partial class IdeaLibraryPage : ContentPage
     private readonly IdeaDataService _data;
     private readonly ObservableCollection<IdeaRow> _rows = new();
 
+    private static readonly string[] ContentTypeOptions =
+    {
+        "All", "AI Solution", "Use Case Sample",
+        "Use Case with AI", "Use Case without AI", "UI Kit",
+    };
+
+    private static readonly string[] StatusOptions =
+    {
+        "All", "Planned", "In progress", "Under review", "Completed", "Published",
+    };
+
+    private readonly string[] _primaryControlOptions;
+
     public IdeaLibraryPage()
         : this(AppDataService.Current)
     {
@@ -21,18 +34,11 @@ public partial class IdeaLibraryPage : ContentPage
         _data = data;
         InitializeComponent();
 
-        ContentTypeFilter.ItemsSource = new[]
-        {
-            "All", "AI Solution", "Use Case Sample",
-            "Use Case with AI", "Use Case without AI", "UI Kit",
-        };
-        CategoryFilter.ItemsSource = Categories.All;
-        StatusFilter.ItemsSource = new[]
-        {
-            "All", "Planned", "In progress", "Under review", "Completed", "Published",
-        };
-        PrimaryControlFilter.ItemsSource = new[] { "All" }
-            .Concat(ControlCatalogue.ControlNames).ToArray();
+        _primaryControlOptions = new[] { "All" }.Concat(ControlCatalogue.ControlNames).ToArray();
+        ContentTypeFilter.ItemsSource = ContentTypeOptions;
+        CategoryFilter.ItemsSource = Categories.All.ToList();
+        StatusFilter.ItemsSource = StatusOptions;
+        PrimaryControlFilter.ItemsSource = _primaryControlOptions;
 
         IdeasList.ItemsSource = _rows;
         VersionLabel.Text = $"v{AppInfo.Version} · DB schema v{_data.SchemaVersion} · catalog v{ControlCatalogue.CatalogVersion}";
@@ -65,11 +71,11 @@ public partial class IdeaLibraryPage : ContentPage
         var filter = new IdeaFilter
         {
             Search = string.IsNullOrWhiteSpace(SearchBox.Text) ? null : SearchBox.Text.Trim(),
-            Category = "All".Equals(CategoryFilter.Text, StringComparison.Ordinal) ? null : CategoryFilter.Text,
-            PrimaryControl = "All".Equals(PrimaryControlFilter.Text, StringComparison.Ordinal) ? null : PrimaryControlFilter.Text,
+            Category = "All".Equals(CategoryFilter.SelectedItem as string, StringComparison.Ordinal) ? null : (CategoryFilter.SelectedItem as string),
+            PrimaryControl = "All".Equals(PrimaryControlFilter.SelectedItem as string, StringComparison.Ordinal) ? null : (PrimaryControlFilter.SelectedItem as string),
         };
 
-        filter.ContentType = ContentTypeFilter.Text switch
+        filter.ContentType = ContentTypeFilter.SelectedItem as string switch
         {
             "AI Solution" => ContentType.AiSolution,
             "Use Case Sample" => ContentType.UseCaseSample,
@@ -79,14 +85,14 @@ public partial class IdeaLibraryPage : ContentPage
             _ => null,
         };
 
-        filter.UseCaseSubtype = ContentTypeFilter.Text switch
+        filter.UseCaseSubtype = ContentTypeFilter.SelectedItem as string switch
         {
             "Use Case with AI" => UseCaseSubtype.WithAi,
             "Use Case without AI" => UseCaseSubtype.WithoutAi,
             _ => null,
         };
 
-        filter.Status = StatusFilter.Text switch
+        filter.Status = StatusFilter.SelectedItem as string switch
         {
             "Planned" => IdeaStatus.Planned,
             "In progress" => IdeaStatus.InProgress,
@@ -106,7 +112,7 @@ public partial class IdeaLibraryPage : ContentPage
 
     private void OnSearchCompleted(object? sender, EventArgs e) => Refresh();
 
-    private void OnFilterChanged(object? sender, ItemTappedEventArgs e) => Refresh();
+    private void OnFilterChanged(object? sender, EventArgs e) => Refresh();
 
     private void OnRowTapped(object? sender, ItemTappedEventArgs e)
     {
@@ -169,7 +175,7 @@ public partial class IdeaLibraryPage : ContentPage
             return;
         }
 
-        var confirm = await DisplayAlert(
+        var confirm = await DisplayAlertAsync(
             "Delete idea",
             "Delete this idea? This cannot be undone.",
             "Delete",
@@ -187,19 +193,6 @@ public partial class IdeaLibraryPage : ContentPage
     private static bool TryGetMenuIdeaId(object? sender, out Guid id)
     {
         id = Guid.Empty;
-
-        if (sender is not MenuItem menuItem)
-        {
-            return false;
-        }
-
-        if (menuItem.Value is Guid guid)
-        {
-            id = guid;
-            return true;
-        }
-
-        return Guid.TryParse(menuItem.Value?.ToString(), out id);
+        return (sender as MenuItem)?.BindingContext is IdeaRow row && Guid.TryParse(row.Id.ToString(), out id);
     }
-
 }

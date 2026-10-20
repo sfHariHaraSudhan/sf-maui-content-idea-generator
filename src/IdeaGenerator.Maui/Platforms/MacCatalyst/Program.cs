@@ -1,4 +1,5 @@
 using Foundation;
+using Microsoft.Maui.Platform;
 using UIKit;
 
 namespace IdeaGenerator.Maui;
@@ -13,7 +14,7 @@ public class AppDelegate : MauiUIApplicationDelegate
 // MAUI window creation stays in App.CreateWindow; this only identifies
 // the scene delegate referenced by UIApplicationSceneManifest.
 [Register("SceneDelegate")]
-public class SceneDelegate : MauiUIWindowSceneDelegate
+public class SceneDelegate : MauiUISceneDelegate
 {
 }
 

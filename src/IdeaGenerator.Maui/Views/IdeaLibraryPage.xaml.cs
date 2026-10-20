@@ -134,17 +134,17 @@ public partial class IdeaLibraryPage : ContentPage
         }
     }
 
-    private void OnViewMenuTapped(object? sender, MenuItemTappedEventArgs e)
+    private void OnViewMenuTapped(object? sender, EventArgs e)
     {
-        if (e.Value is Guid id)
+        if (TryGetMenuIdeaId(sender, out var id))
         {
             OpenDetail(id);
         }
     }
 
-    private void OnPinMenuTapped(object? sender, MenuItemTappedEventArgs e)
+    private void OnPinMenuTapped(object? sender, EventArgs e)
     {
-        if (e.Value is not Guid id)
+        if (!TryGetMenuIdeaId(sender, out var id))
         {
             return;
         }
@@ -154,22 +154,27 @@ public partial class IdeaLibraryPage : ContentPage
         Refresh();
     }
 
-    private void OnEditMenuTapped(object? sender, MenuItemTappedEventArgs e)
+    private void OnEditMenuTapped(object? sender, EventArgs e)
     {
-        if (e.Value is Guid id)
+        if (TryGetMenuIdeaId(sender, out var id))
         {
             _ = Navigation.PushAsync(new IdeaFormPage(_data, id));
         }
     }
 
-    private async void OnDeleteMenuTapped(object? sender, MenuItemTappedEventArgs e)
+    private async void OnDeleteMenuTapped(object? sender, EventArgs e)
     {
-        if (e.Value is not Guid id)
+        if (!TryGetMenuIdeaId(sender, out var id))
         {
             return;
         }
 
-        var confirm = await DisplayAlert("Delete idea", "Delete this idea? This cannot be undone.", "Delete", "Cancel");
+        var confirm = await DisplayAlert(
+            "Delete idea",
+            "Delete this idea? This cannot be undone.",
+            "Delete",
+            "Cancel");
+
         if (!confirm)
         {
             return;
@@ -178,4 +183,23 @@ public partial class IdeaLibraryPage : ContentPage
         _data.Delete(id);
         Refresh();
     }
+
+    private static bool TryGetMenuIdeaId(object? sender, out Guid id)
+    {
+        id = Guid.Empty;
+
+        if (sender is not MenuItem menuItem)
+        {
+            return false;
+        }
+
+        if (menuItem.Value is Guid guid)
+        {
+            id = guid;
+            return true;
+        }
+
+        return Guid.TryParse(menuItem.Value?.ToString(), out id);
+    }
+
 }

@@ -300,6 +300,9 @@ public partial class IdeaLibraryPage : ContentPage
     private static bool TryGetMenuIdeaId(object? sender, out Guid id)
     {
         id = Guid.Empty;
-        return (sender as MenuItem)?.BindingContext is IdeaRow row && Guid.TryParse(row.Id.ToString(), out id);
+
+        return sender is BindableObject bindableObject
+            && bindableObject.BindingContext is IdeaRow row
+            && Guid.TryParse(row.Id.ToString(), out id);
     }
 }

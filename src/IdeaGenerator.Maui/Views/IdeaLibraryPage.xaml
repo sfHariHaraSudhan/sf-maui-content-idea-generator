@@ -46,7 +46,6 @@
                    TextColor="{StaticResource TextPrimary}"
                    FontSize="14"
                    Keyboard="Text"
-                   SearchButtonPressed="OnSearchPressed"
                    Completed="OnSearchPressed" />
         </Border>
 
@@ -133,12 +132,10 @@
                             SelectionChanged="OnSelectionChanged"
                             IsVisible="False">
                 <CollectionView.ItemsLayout>
-                    <UniformGridLayout Orientation="Columns"
-                                       ItemsColumnCount="Auto"
-                                       ItemsWidth="480" ItemsHeight="250"
-                                       OrientationThreshold="1.3"
-                                       VerticalItemSpacing="12"
-                                       HorizontalItemSpacing="12" />
+                    <GridItemsLayout Orientation="Vertical"
+                                     Span="2"
+                                     VerticalItemSpacing="12"
+                                     HorizontalItemSpacing="12" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.EmptyView>
                     <VerticalStackLayout Spacing="8" Padding="24,48"
@@ -198,14 +195,28 @@
                                        LineBreakMode="TailTruncation"
                                        Margin="0,2,0,0" />
                             </VerticalStackLayout>
-                            <Border.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Text="View details" Clicked="OnViewMenuTapped" />
-                                    <MenuItem Text="Pin / Unpin" Clicked="OnPinMenuTapped" />
-                                    <MenuItem Text="Edit" Clicked="OnEditMenuTapped" />
-                                    <MenuItem Text="Delete" Clicked="OnDeleteMenuTapped" />
-                                </ContextMenu>
-                            </Border.ContextMenu>
+                            <HorizontalStackLayout Spacing="8" Margin="0,6,0,0">
+                                <Button Text="View"
+                                        Clicked="OnViewMenuTapped"
+                                        FontSize="11"
+                                        Padding="10,4"
+                                        MinimumHeightRequest="32" />
+                                <Button Text="Pin / Unpin"
+                                        Clicked="OnPinMenuTapped"
+                                        FontSize="11"
+                                        Padding="10,4"
+                                        MinimumHeightRequest="32" />
+                                <Button Text="Edit"
+                                        Clicked="OnEditMenuTapped"
+                                        FontSize="11"
+                                        Padding="10,4"
+                                        MinimumHeightRequest="32" />
+                                <Button Text="Delete"
+                                        Clicked="OnDeleteMenuTapped"
+                                        FontSize="11"
+                                        Padding="10,4"
+                                        MinimumHeightRequest="32" />
+                            </HorizontalStackLayout>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

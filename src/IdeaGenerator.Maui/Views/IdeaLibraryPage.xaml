@@ -35,16 +35,16 @@
                 <HorizontalStackLayout Spacing="8">
                     <Picker x:Name="ContentTypeFilter" Title="Content type" SelectedIndex="0"
                             FontSize="13" TextColor="{StaticResource TextSecondary}"
-                            SelectedItemChanged="OnFilterChanged" />
+                            SelectedIndexChanged="OnFilterChanged" />
                     <Picker x:Name="CategoryFilter" Title="Category" SelectedIndex="0"
                             FontSize="13" TextColor="{StaticResource TextSecondary}"
-                            SelectedItemChanged="OnFilterChanged" />
+                            SelectedIndexChanged="OnFilterChanged" />
                     <Picker x:Name="StatusFilter" Title="Status" SelectedIndex="0"
                             FontSize="13" TextColor="{StaticResource TextSecondary}"
-                            SelectedItemChanged="OnFilterChanged" />
+                            SelectedIndexChanged="OnFilterChanged" />
                     <Picker x:Name="PrimaryControlFilter" Title="Primary control" SelectedIndex="0"
                             FontSize="13" TextColor="{StaticResource TextSecondary}"
-                            SelectedItemChanged="OnFilterChanged" />
+                            SelectedIndexChanged="OnFilterChanged" />
                 </HorizontalStackLayout>
 
                 <Label x:Name="VersionLabel" FontSize="11" TextColor="{StaticResource TextMuted}" />
@@ -52,8 +52,7 @@
                 <!-- Idea list -->
                 <CollectionView x:Name="IdeasList"
                                  SelectionMode="Single"
-                                 SelectionChanged="OnSelectionChanged"
-                                 ItemTapped="OnRowTapped">
+                                 SelectionChanged="OnSelectionChanged">
                     <CollectionView.EmptyView>
                         <VerticalStackLayout Spacing="8" Padding="24,48" HorizontalOptions="Fill" VerticalOptions="Center">
                             <Label Text="🗂" FontSize="40" HorizontalOptions="Center" />

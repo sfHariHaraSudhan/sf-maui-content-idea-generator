@@ -39,8 +39,8 @@ public partial class IdeaLibraryPage : ContentPage
         CategoryFilter.ItemsSource = Categories.All.ToList();
         StatusFilter.ItemsSource = StatusOptions;
         PrimaryControlFilter.ItemsSource = _primaryControlOptions;
-
         IdeasList.ItemsSource = _rows;
+
         VersionLabel.Text = $"v{AppInfo.Version} · DB schema v{_data.SchemaVersion} · catalog v{ControlCatalogue.CatalogVersion}";
     }
 
@@ -114,21 +114,15 @@ public partial class IdeaLibraryPage : ContentPage
 
     private void OnFilterChanged(object? sender, EventArgs e) => Refresh();
 
-    private void OnRowTapped(object? sender, ItemTappedEventArgs e)
+    private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (e.Item is not IdeaRow row)
+        if (e.CurrentSelection.FirstOrDefault() is not IdeaRow row)
         {
             return;
         }
 
         IdeasList.SelectedItem = null;
         OpenDetail(row.Id);
-    }
-
-    private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        // Tapping handled via ItemTapped; reset selection so re-tapping works.
-        IdeasList.SelectedItem = null;
     }
 
     private void OpenDetail(Guid id)

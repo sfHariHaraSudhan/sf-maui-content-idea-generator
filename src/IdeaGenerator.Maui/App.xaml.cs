@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Hosting;
-
 namespace IdeaGenerator.Maui;
 
 public partial class App : Application
@@ -11,11 +9,10 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        // Eagerly initialize the local database (and idempotent sample seed)
-        // before any page renders.
+        // Initialize the local database and idempotent sample seed
+        // before the Idea Library is displayed.
         _ = AppDataService.Current;
-        var window = base.CreateWindow(activationState);
-        window.Page = new AppShell();
-        return window;
+
+        return new Window(new AppShell());
     }
 }

@@ -13,6 +13,7 @@ public partial class IdeaFormPage : ContentPage
 {
     private readonly IdeaDataService _data;
     private readonly Guid? _editingId;
+    private bool _initialized;
 
     private static readonly string[] ContentTypeOptions =
     {
@@ -41,10 +42,8 @@ public partial class IdeaFormPage : ContentPage
         SubtypePicker.ItemsSource = SubtypeOptions;
         CategoryPicker.ItemsSource = Categories.All.ToList();
         StatusPicker.ItemsSource = StatusOptions;
-        StatusPicker.SelectedIndex = 0;
         _primaryControlOptions = new[] { "—" }.Concat(ControlCatalogue.ControlNames).ToArray();
         PrimaryControlPicker.ItemsSource = _primaryControlOptions;
-        PrimaryControlPicker.SelectedIndex = 0;
         ContentTypePicker.SelectedIndexChanged += OnContentTypeChanged;
 
         if (editingId is { } id && _data.Get(id) is { } idea)
@@ -58,30 +57,64 @@ public partial class IdeaFormPage : ContentPage
         {
             Title = "Add Idea";
             FormTitleLabel.Text = "Add Idea";
+        }
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        // Picker index values are applied once, after the page is fully
+        // attached. Constructor-time SelectedIndex is unreliable for Picker
+        // items populated after InitializeComponent on Mac Catalyst.
+        if (_initialized)
+        {
+            return;
+        }
+
+        _initialized = true;
+
+        if (_editingId is { } id && _data.Get(id) is { } idea)
+        {
+            ApplyPickerSelections(idea);
+        }
+        else
+        {
+            StatusPicker.SelectedIndex = 0;
+            PrimaryControlPicker.SelectedIndex = 0;
+            SubtypePicker.SelectedIndex = 0;
             UpdateConditionalFields(0);
         }
+    }
+
+    private void ApplyPickerSelections(Idea idea)
+    {
+        UpdatePickerSelectionsFor(idea);
+        UpdateConditionalFields(ContentTypePicker.SelectedIndex);
+        UpdateSubtypeSelection(idea.ContentType, idea.UseCaseSubtype);
+    }
+
+    private void UpdatePickerSelectionsFor(Idea idea)
+    {
+        ContentTypePicker.SelectedIndex = IndexForContentType(idea.ContentType, idea.UseCaseSubtype);
+        CategoryPicker.SelectedIndex = Math.Max(0, Categories.All.ToList().FindIndex(c => c == idea.Category));
+        StatusPicker.SelectedIndex = (int)idea.Status;
+        PrimaryControlPicker.SelectedIndex = Math.Max(0, ControlNamesIndex(idea.PrimaryControl));
     }
 
     private void PopulateFrom(Idea idea)
     {
         TitleEntry.Text = idea.Title;
-        ContentTypePicker.SelectedIndex = IndexForContentType(idea.ContentType, idea.UseCaseSubtype);
-        CategoryPicker.SelectedIndex = Math.Max(0, Categories.All.ToList().FindIndex(c => c == idea.Category));
-        StatusPicker.SelectedIndex = (int)idea.Status;
         TargetCustomerEntry.Text = idea.TargetCustomer;
         CustomerProblemBox.Text = idea.CustomerProblem;
         DescriptionBox.Text = idea.ShortDescription;
         KeywordsEntry.Text = idea.Keywords;
-        PrimaryControlPicker.SelectedIndex = Math.Max(0, ControlNamesIndex(idea.PrimaryControl));
         SupportingControlsBox.Text = idea.SupportingControls;
         ControlFeaturesBox.Text = idea.ControlFeatures;
         WorkflowBox.Text = idea.WorkflowSummary;
         ScreenNamesEntry.Text = idea.ScreenNames;
         AiOperationEntry.Text = idea.AiOperation;
         PinnedToggle.IsToggled = idea.IsPinned;
-
-        UpdateConditionalFields(ContentTypePicker.SelectedIndex);
-        UpdateSubtypeSelection(idea.ContentType, idea.UseCaseSubtype);
     }
 
     private void OnContentTypeChanged(object? sender, EventArgs e) =>

@@ -3,12 +3,21 @@
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:views="clr-namespace:IdeaGenerator.Maui.Views"
        x:Class="IdeaGenerator.Maui.AppShell"
-       FlyoutBehavior="Disabled"
-       TabBarBackgroundColor="{StaticResource AppBackground}"
-       Shell.TabBarUnselectedColor="{StaticResource TextMuted}">
+       FlyoutBehavior="Flyout">
 
-    <TabBar Title="Discover">
-        <ShellContent Title="Idea Library" ContentTemplate="{DataTemplate views:IdeaLibraryPage}" />
-        <ShellContent Title="Discover Ideas" ContentTemplate="{DataTemplate views:DiscoverIdeasPage}" />
-    </TabBar>
+    <FlyoutItem Title="Idea Library"
+                Route="IdeaLibrary"
+                Shell.NavBarIsVisible="False"
+                Shell.TabBarIsVisible="False">
+        <ShellContent Title="Idea Library"
+                      ContentTemplate="{DataTemplate views:IdeaLibraryPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Discover Ideas"
+                Route="DiscoverIdeas"
+                Shell.NavBarIsVisible="False"
+                Shell.TabBarIsVisible="False">
+        <ShellContent Title="Discover Ideas"
+                      ContentTemplate="{DataTemplate views:DiscoverIdeasPage}" />
+    </FlyoutItem>
 </Shell>

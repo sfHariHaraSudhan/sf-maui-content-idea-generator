@@ -10,7 +10,6 @@ public partial class IdeaLibraryPage : ContentPage
 {
     private readonly IdeaDataService _data;
     private readonly ObservableCollection<IdeaRow> _rows = new();
-    private bool _initialized;
     private int _totalCount;
 
     private static readonly string[] ContentTypeOptions =
@@ -24,7 +23,16 @@ public partial class IdeaLibraryPage : ContentPage
         "All", "Planned", "In progress", "Under review", "Completed", "Published",
     };
 
+    private readonly string[] _categoryOptions;
     private readonly string[] _primaryControlOptions;
+
+    // Explicit filter state. "All" is a real, selectable value and means
+    // no filter. This is independent of any Picker state (there are no
+    // Pickers in the library), so first launch is always unfiltered.
+    private string _contentType = "All";
+    private string _category = "All";
+    private string _status = "All";
+    private string _primaryControl = "All";
 
     public IdeaLibraryPage()
         : this(AppDataService.Current)
@@ -36,11 +44,8 @@ public partial class IdeaLibraryPage : ContentPage
         _data = data;
         InitializeComponent();
 
+        _categoryOptions = new[] { "All" }.Concat(Categories.All).ToArray();
         _primaryControlOptions = new[] { "All" }.Concat(ControlCatalogue.ControlNames).ToArray();
-        ContentTypeFilter.ItemsSource = ContentTypeOptions;
-        CategoryFilter.ItemsSource = Categories.All.ToList();
-        StatusFilter.ItemsSource = StatusOptions;
-        PrimaryControlFilter.ItemsSource = _primaryControlOptions;
         IdeasList.ItemsSource = _rows;
 
         VersionLabel.Text = $"v{AppInfo.Version} · DB schema v{_data.SchemaVersion} · catalog v{ControlCatalogue.CatalogVersion}";
@@ -49,30 +54,7 @@ public partial class IdeaLibraryPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-
-        // Apply filter defaults once, after the page is fully attached.
-        // Constructor-time SelectedIndex is unreliable for Picker items
-        // populated after InitializeComponent on Mac Catalyst; the native
-        // control can surface a non-"All" value on first launch, which
-        // silently hid the seeded ideas.
-        if (!_initialized)
-        {
-            _initialized = true;
-            ApplyUnfilteredDefaults();
-        }
-
         Refresh();
-    }
-
-    private void ApplyUnfilteredDefaults()
-    {
-        ContentTypeFilter.SelectedItem = null;
-        CategoryFilter.SelectedItem = null;
-        StatusFilter.SelectedItem = null;
-        PrimaryControlFilter.SelectedItem = null;
-        PinnedOnlyToggle.IsToggled = false;
-        SearchBox.Text = string.Empty;
-        UpdateClearFiltersVisibility();
     }
 
     private void Refresh()
@@ -95,6 +77,7 @@ public partial class IdeaLibraryPage : ContentPage
 
             UpdateResultCount();
             UpdateEmptyState(filter);
+            UpdateClearFiltersVisibility();
             IdeasList.IsVisible = true;
         }
         catch (Exception ex)
@@ -112,20 +95,32 @@ public partial class IdeaLibraryPage : ContentPage
     private void UpdateResultCount()
     {
         var showing = _rows.Count;
-        ResultCountLabel.Text = filterActive()
+        ResultCountLabel.Text = AnyFilterActive()
             ? $"{showing} of {_totalCount} idea{(showing == 1 ? "" : "s")}"
             : $"{_totalCount} idea{(_totalCount == 1 ? "" : "s")}";
-
-        bool filterActive() =>
-            !string.IsNullOrWhiteSpace(SearchBox.Text) ||
-            !IsUnselected(ContentTypeFilter) ||
-            !IsUnselected(CategoryFilter) ||
-            !IsUnselected(StatusFilter) ||
-            !IsUnselected(PrimaryControlFilter) ||
-            PinnedOnlyToggle.IsToggled;
-
-        UpdateClearFiltersVisibility();
     }
+
+    // Search + the four dropdown filters + Pinned-only all reduce the list,
+    // so all of them make the count show "N of total".
+    private bool AnyFilterActive() =>
+        !string.IsNullOrWhiteSpace(SearchBox.Text) ||
+        _contentType != "All" ||
+        _category != "All" ||
+        _status != "All" ||
+        _primaryControl != "All" ||
+        PinnedOnlyToggle.IsToggled;
+
+    // Clear Filters represents the search + dropdown filters only.
+    // Pinned-only is independent and must not trigger or be cleared by it.
+    private bool ShouldShowClearFilters() =>
+        !string.IsNullOrWhiteSpace(SearchBox.Text) ||
+        _contentType != "All" ||
+        _category != "All" ||
+        _status != "All" ||
+        _primaryControl != "All";
+
+    private void UpdateClearFiltersVisibility() =>
+        ClearFiltersButton.IsVisible = ShouldShowClearFilters();
 
     private void UpdateEmptyState(IdeaFilter filter)
     {
@@ -151,23 +146,14 @@ public partial class IdeaLibraryPage : ContentPage
         }
     }
 
-    private static bool IsUnselected(Picker picker) =>
-        picker.SelectedIndex < 0 || picker.SelectedItem is null || "All".Equals(picker.SelectedItem as string, StringComparison.Ordinal);
-
     private IdeaFilter BuildFilter()
     {
-        // Null or unselected Picker values are always treated as "All".
-        var category = (string?)CategoryFilter.SelectedItem;
-        var primaryControl = (string?)PrimaryControlFilter.SelectedItem;
-        var contentTypeText = (string?)ContentTypeFilter.SelectedItem;
-        var statusText = (string?)StatusFilter.SelectedItem;
-
         return new IdeaFilter
         {
             Search = string.IsNullOrWhiteSpace(SearchBox.Text) ? null : SearchBox.Text.Trim(),
-            Category = "All".Equals(category, StringComparison.Ordinal) ? null : category,
-            PrimaryControl = "All".Equals(primaryControl, StringComparison.Ordinal) ? null : primaryControl,
-            ContentType = contentTypeText switch
+            Category = _category == "All" ? null : _category,
+            PrimaryControl = _primaryControl == "All" ? null : _primaryControl,
+            ContentType = _contentType switch
             {
                 "AI Solution" => ContentType.AiSolution,
                 "Use Case Sample" => ContentType.UseCaseSample,
@@ -176,13 +162,13 @@ public partial class IdeaLibraryPage : ContentPage
                 "UI Kit" => ContentType.UiKit,
                 _ => null,
             },
-            UseCaseSubtype = contentTypeText switch
+            UseCaseSubtype = _contentType switch
             {
                 "Use Case with AI" => UseCaseSubtype.WithAi,
                 "Use Case without AI" => UseCaseSubtype.WithoutAi,
                 _ => null,
             },
-            Status = statusText switch
+            Status = _status switch
             {
                 "Planned" => IdeaStatus.Planned,
                 "In progress" => IdeaStatus.InProgress,
@@ -195,32 +181,80 @@ public partial class IdeaLibraryPage : ContentPage
         };
     }
 
-    private void UpdateClearFiltersVisibility()
+    // ─────────────────────────── filter buttons ───────────────────────────
+
+    private async Task<string?> PickFilterValue(string title, string[] options, string current)
     {
-        ClearFiltersButton.IsVisible =
-            !string.IsNullOrWhiteSpace(SearchBox.Text) ||
-            !IsUnselected(ContentTypeFilter) ||
-            !IsUnselected(CategoryFilter) ||
-            !IsUnselected(StatusFilter) ||
-            !IsUnselected(PrimaryControlFilter) ||
-            PinnedOnlyToggle.IsToggled;
+        var selector = new FilterSelectionPage(title, options, current);
+        await Navigation.PushModalAsync(selector);
+        return selector.SelectedValue;
     }
 
-    private void OnSearchPressed(object? sender, EventArgs e) => Refresh();
+    private async void OnContentTypeFilterClicked(object? sender, EventArgs e)
+    {
+        _contentType = await PickFilterValue("Content type", ContentTypeOptions, _contentType) ?? _contentType;
+        ContentTypeFilterButton.Text = _contentType;
+        Refresh();
+    }
 
-    private void OnFilterChanged(object? sender, EventArgs e) => Refresh();
+    private async void OnCategoryFilterClicked(object? sender, EventArgs e)
+    {
+        _category = await PickFilterValue("Category", _categoryOptions, _category) ?? _category;
+        CategoryFilterButton.Text = _category;
+        Refresh();
+    }
+
+    private async void OnStatusFilterClicked(object? sender, EventArgs e)
+    {
+        _status = await PickFilterValue("Status", StatusOptions, _status) ?? _status;
+        StatusFilterButton.Text = _status;
+        Refresh();
+    }
+
+    private async void OnPrimaryControlFilterClicked(object? sender, EventArgs e)
+    {
+        _primaryControl = await PickFilterValue("Primary control", _primaryControlOptions, _primaryControl) ?? _primaryControl;
+        PrimaryControlFilterButton.Text = _primaryControl;
+        Refresh();
+    }
+
+    private void OnPinnedOnlyToggled(object? sender, ToggledEventArgs e) => Refresh();
 
     private void OnClearFiltersClicked(object? sender, EventArgs e)
     {
-        // Setting SelectedItem = null while the handler is attached fires
-        // SelectedIndexChanged again for each Picker; that is harmless
-        // because the subsequent Refresh runs with the cleared state.
+        // Clears search + the four dropdown filters only.
+        // Pinned-only keeps its current state.
         SearchBox.Text = string.Empty;
-        ApplyUnfilteredDefaults();
+        ClearSearchButton.IsVisible = false;
+        _contentType = "All";
+        _category = "All";
+        _status = "All";
+        _primaryControl = "All";
+        ContentTypeFilterButton.Text = "All";
+        CategoryFilterButton.Text = "All";
+        StatusFilterButton.Text = "All";
+        PrimaryControlFilterButton.Text = "All";
+        Refresh();
+    }
+
+    // ─────────────────────────── search ───────────────────────────
+
+    private void OnSearchPressed(object? sender, EventArgs e)
+    {
+        ClearSearchButton.IsVisible = !string.IsNullOrWhiteSpace(SearchBox.Text);
+        Refresh();
+    }
+
+    private void OnClearSearchClicked(object? sender, EventArgs e)
+    {
+        SearchBox.Text = string.Empty;
+        ClearSearchButton.IsVisible = false;
         Refresh();
     }
 
     private void OnRetryClicked(object? sender, EventArgs e) => Refresh();
+
+    // ─────────────────────────── add / edit / detail ───────────────────────────
 
     private void OnAddClicked(object? sender, EventArgs e)
     {

@@ -13,7 +13,9 @@ public sealed class IdeaRow
     public string PrimaryControl { get; init; } = string.Empty;
     public string Description { get; init; } = string.Empty;
     public bool IsPinned { get; init; }
-    public bool CanUnpin => IsPinned;
+
+    /// <summary>Textual pin state for the card action button ("Pin" / "Unpin").</summary>
+    public string PinActionText => IsPinned ? "Unpin" : "Pin";
 
     public static IdeaRow From(Idea idea) => new()
     {

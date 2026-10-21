@@ -36,18 +36,32 @@
         </Grid>
 
         <!-- Search -->
-        <Border Grid.Row="1" Margin="0,14,0,0"
-                BackgroundColor="{StaticResource Surface}"
-                Stroke="{StaticResource Border}" StrokeThickness="1"
-                StrokeShape="RoundRectangle 12" Padding="12,2">
-            <Entry x:Name="SearchBox"
-                   Placeholder="Search ideas — title, description, problem, keywords"
-                   BackgroundColor="Transparent"
-                   TextColor="{StaticResource TextPrimary}"
-                   FontSize="14"
-                   Keyboard="Text"
-                   Completed="OnSearchPressed" />
-        </Border>
+        <Grid Grid.Row="1" Margin="0,14,0,0" ColumnDefinitions="*,Auto">
+            <Border Grid.Column="0"
+                    BackgroundColor="{StaticResource Surface}"
+                    Stroke="{StaticResource Border}" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12" Padding="12,2">
+                <Entry x:Name="SearchBox"
+                       Placeholder="Search ideas — title, description, problem, keywords"
+                       BackgroundColor="Transparent"
+                       TextColor="{StaticResource TextPrimary}"
+                       FontSize="14"
+                       Keyboard="Text"
+                       Completed="OnSearchPressed" />
+            </Border>
+            <Button x:Name="ClearSearchButton" Grid.Column="1"
+                    Text="Clear"
+                    IsVisible="False"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource TextSecondary}"
+                    Stroke="{StaticResource Border}" StrokeThickness="1"
+                    CornerRadius="10"
+                    Padding="12,0"
+                    MinimumHeightRequest="34"
+                    Margin="8,0,0,0"
+                    VerticalOptions="Center"
+                    Clicked="OnClearSearchClicked" />
+        </Grid>
 
         <!-- Filters -->
         <Grid Grid.Row="2" Margin="0,14,0,0"
@@ -64,26 +78,57 @@
             <Label Grid.Row="0" Grid.Column="4" Text="Pinned only"
                    FontSize="11" TextColor="{StaticResource TextMuted}" Margin="0,0,12,4" />
 
-            <Picker x:Name="ContentTypeFilter" Grid.Row="1" Grid.Column="0" Title="All"
+            <Button x:Name="ContentTypeFilterButton" Grid.Row="1" Grid.Column="0"
+                    Text="All"
+                    BackgroundColor="{StaticResource Surface}"
+                    TextColor="{StaticResource TextPrimary}"
+                    Stroke="{StaticResource Border}" StrokeThickness="1"
+                    CornerRadius="10"
+                    Padding="10,0"
+                    FontSize="13"
+                    MinimumHeightRequest="38"
+                    VerticalOptions="End"
+                    Clicked="OnContentTypeFilterClicked" />
+            <Button x:Name="CategoryFilterButton" Grid.Row="1" Grid.Column="1"
+                    Text="All"
+                    BackgroundColor="{StaticResource Surface}"
+                    TextColor="{StaticResource TextPrimary}"
+                    Stroke="{StaticResource Border}" StrokeThickness="1"
+                    CornerRadius="10"
+                    Padding="10,0"
+                    FontSize="13"
+                    MinimumHeightRequest="38"
                     Margin="0,0,12,0"
-                    FontSize="13" TextColor="{StaticResource TextPrimary}"
-                    SelectedIndexChanged="OnFilterChanged" />
-            <Picker x:Name="CategoryFilter" Grid.Row="1" Grid.Column="1" Title="All"
+                    VerticalOptions="End"
+                    Clicked="OnCategoryFilterClicked" />
+            <Button x:Name="StatusFilterButton" Grid.Row="1" Grid.Column="2"
+                    Text="All"
+                    BackgroundColor="{StaticResource Surface}"
+                    TextColor="{StaticResource TextPrimary}"
+                    Stroke="{StaticResource Border}" StrokeThickness="1"
+                    CornerRadius="10"
+                    Padding="10,0"
+                    FontSize="13"
+                    MinimumHeightRequest="38"
                     Margin="0,0,12,0"
-                    FontSize="13" TextColor="{StaticResource TextPrimary}"
-                    SelectedIndexChanged="OnFilterChanged" />
-            <Picker x:Name="StatusFilter" Grid.Row="1" Grid.Column="2" Title="All"
+                    VerticalOptions="End"
+                    Clicked="OnStatusFilterClicked" />
+            <Button x:Name="PrimaryControlFilterButton" Grid.Row="1" Grid.Column="3"
+                    Text="All"
+                    BackgroundColor="{StaticResource Surface}"
+                    TextColor="{StaticResource TextPrimary}"
+                    Stroke="{StaticResource Border}" StrokeThickness="1"
+                    CornerRadius="10"
+                    Padding="10,0"
+                    FontSize="13"
+                    MinimumHeightRequest="38"
                     Margin="0,0,12,0"
-                    FontSize="13" TextColor="{StaticResource TextPrimary}"
-                    SelectedIndexChanged="OnFilterChanged" />
-            <Picker x:Name="PrimaryControlFilter" Grid.Row="1" Grid.Column="3" Title="All"
-                    Margin="0,0,12,0"
-                    FontSize="13" TextColor="{StaticResource TextPrimary}"
-                    SelectedIndexChanged="OnFilterChanged" />
+                    VerticalOptions="End"
+                    Clicked="OnPrimaryControlFilterClicked" />
             <Switch x:Name="PinnedOnlyToggle" Grid.Row="1" Grid.Column="4"
                     HorizontalOptions="Start" VerticalOptions="Center"
                     OnColor="{StaticResource Primary}"
-                    Toggled="OnFilterChanged" />
+                    Toggled="OnPinnedOnlyToggled" />
             <Button x:Name="ClearFiltersButton" Grid.Row="1" Grid.Column="5"
                     Text="Clear Filters"
                     IsVisible="False"
@@ -91,8 +136,10 @@
                     TextColor="{StaticResource PrimaryDark}"
                     CornerRadius="10"
                     Padding="12,0"
-                    MinimumHeightRequest="36"
-                    VerticalOptions="Center"
+                    FontSize="13"
+                    MinimumHeightRequest="38"
+                    Margin="0,0,0,0"
+                    VerticalOptions="End"
                     Clicked="OnClearFiltersClicked" />
         </Grid>
 
@@ -153,16 +200,36 @@
                     <DataTemplate>
                         <Border BackgroundColor="{StaticResource Surface}"
                                 Stroke="{StaticResource Border}" StrokeThickness="1"
-                                StrokeShape="RoundRectangle 16"
-                                Padding="16,14">
+                                StrokeShape="RoundRectangle 14"
+                                Padding="14,12">
                             <VerticalStackLayout Spacing="8">
-                                <HorizontalStackLayout Spacing="8">
+
+                                <!-- Header row: title + pinned state -->
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0"
+                                           Text="{Binding Title}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource TextPrimary}"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label Grid.Column="1" Text="📌"
+                                           FontSize="13"
+                                           IsVisible="{Binding IsPinned}"
+                                           VerticalOptions="Center"
+                                           Margin="8,0,0,0" />
+                                </Grid>
+
+                                <!-- Metadata row: path badge, category, status -->
+                                <HorizontalStackLayout Spacing="8"
+                                                       VerticalOptions="Center">
                                     <Label Text="{Binding Path}"
                                            FontSize="11"
                                            TextColor="White"
                                            BackgroundColor="{StaticResource PrimaryDark}"
                                            Padding="8,3"
-                                           VerticalOptions="Center" />
+                                           VerticalOptions="Center"
+                                           LineBreakMode="TailTruncation"
+                                           MaximumWidthRequest="190" />
                                     <Label Text="{Binding Category}"
                                            FontSize="11"
                                            TextColor="{StaticResource TextMuted}"
@@ -173,50 +240,61 @@
                                            TextColor="{StaticResource TextMuted}"
                                            VerticalOptions="Center"
                                            LineBreakMode="TailTruncation" />
-                                    <Label Text="📌"
-                                           FontSize="13"
-                                           IsVisible="{Binding IsPinned}"
-                                           VerticalOptions="Center"
-                                           HorizontalOptions="End" />
                                 </HorizontalStackLayout>
-                                <Label Text="{Binding Title}"
-                                       FontSize="16"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource TextPrimary}"
-                                       LineBreakMode="TailTruncation" />
+
+                                <!-- Description (1–2 lines) -->
                                 <Label Text="{Binding Description}"
                                        FontSize="13"
                                        TextColor="{StaticResource TextSecondary}"
-                                       LineBreakMode="CharacterWrap"
-                                       LineHeight="19" />
+                                       LineBreakMode="TailTruncation"
+                                       MaxLines="2" />
+
+                                <!-- Primary control -->
                                 <Label Text="{Binding PrimaryControl}"
                                        FontSize="11"
                                        TextColor="{StaticResource TextMuted}"
-                                       LineBreakMode="TailTruncation"
-                                       Margin="0,2,0,0" />
+                                       LineBreakMode="TailTruncation" />
+
+                                <!-- Action row -->
+                                <HorizontalStackLayout Spacing="8" Margin="0,2,0,0">
+                                    <Button Text="View"
+                                            Clicked="OnViewMenuTapped"
+                                            FontSize="12"
+                                            Padding="12,6"
+                                            MinimumHeightRequest="32"
+                                            BackgroundColor="{StaticResource PrimarySoft}"
+                                            TextColor="{StaticResource PrimaryDark}"
+                                            CornerRadius="8" />
+                                    <Button Text="{Binding PinActionText}"
+                                            Clicked="OnPinMenuTapped"
+                                            FontSize="12"
+                                            Padding="12,6"
+                                            MinimumHeightRequest="32"
+                                            BackgroundColor="{StaticResource Surface}"
+                                            TextColor="{StaticResource TextPrimary}"
+                                            Stroke="{StaticResource Border}" StrokeThickness="1"
+                                            CornerRadius="8" />
+                                    <Button Text="Edit"
+                                            Clicked="OnEditMenuTapped"
+                                            FontSize="12"
+                                            Padding="12,6"
+                                            MinimumHeightRequest="32"
+                                            BackgroundColor="{StaticResource Surface}"
+                                            TextColor="{StaticResource TextPrimary}"
+                                            Stroke="{StaticResource Border}" StrokeThickness="1"
+                                            CornerRadius="8" />
+                                    <Button Text="Delete"
+                                            Clicked="OnDeleteMenuTapped"
+                                            FontSize="12"
+                                            Padding="12,6"
+                                            MinimumHeightRequest="32"
+                                            BackgroundColor="{StaticResource Surface}"
+                                            TextColor="{StaticResource Error}"
+                                            Stroke="{StaticResource Error}" StrokeThickness="1"
+                                            CornerRadius="8" />
+                                </HorizontalStackLayout>
+
                             </VerticalStackLayout>
-                            <HorizontalStackLayout Spacing="8" Margin="0,6,0,0">
-                                <Button Text="View"
-                                        Clicked="OnViewMenuTapped"
-                                        FontSize="11"
-                                        Padding="10,4"
-                                        MinimumHeightRequest="32" />
-                                <Button Text="Pin / Unpin"
-                                        Clicked="OnPinMenuTapped"
-                                        FontSize="11"
-                                        Padding="10,4"
-                                        MinimumHeightRequest="32" />
-                                <Button Text="Edit"
-                                        Clicked="OnEditMenuTapped"
-                                        FontSize="11"
-                                        Padding="10,4"
-                                        MinimumHeightRequest="32" />
-                                <Button Text="Delete"
-                                        Clicked="OnDeleteMenuTapped"
-                                        FontSize="11"
-                                        Padding="10,4"
-                                        MinimumHeightRequest="32" />
-                            </HorizontalStackLayout>
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

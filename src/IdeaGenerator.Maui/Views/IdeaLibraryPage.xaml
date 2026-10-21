@@ -181,7 +181,7 @@
                                 </HorizontalStackLayout>
                                 <Label Text="{Binding Title}"
                                        FontSize="16"
-                                       FontAttributes="SemiBold"
+                                       FontAttributes="Bold"
                                        TextColor="{StaticResource TextPrimary}"
                                        LineBreakMode="TailTruncation" />
                                 <Label Text="{Binding Description}"

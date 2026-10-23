@@ -66,7 +66,7 @@
         <!-- Filters -->
         <Grid Grid.Row="2" Margin="0,14,0,0"
               ColumnDefinitions="*,*,*,*,Auto,Auto"
-              RowDefinitions="Auto,Auto" VerticalOptions="Start">
+              RowDefinitions="Auto,Auto,Auto" VerticalOptions="Start">
             <Label Grid.Row="0" Grid.Column="0" Text="Content type"
                    FontSize="11" TextColor="{StaticResource TextMuted}" Margin="0,0,12,4" />
             <Label Grid.Row="0" Grid.Column="1" Text="Category"
@@ -141,6 +141,37 @@
                     Margin="0,0,0,0"
                     VerticalOptions="End"
                     Clicked="OnClearFiltersClicked" />
+
+            <!-- In-page dropdown: replaces the modal FilterSelectionPage, which
+                 rendered as a native bottom sheet on Mac Catalyst. -->
+            <Border x:Name="FilterDropdown" Grid.Row="2" Grid.ColumnSpan="6"
+                    IsVisible="False" Margin="0,8,0,0"
+                    BackgroundColor="{StaticResource Surface}"
+                    Stroke="{StaticResource Border}" StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="8"
+                    VerticalOptions="Start">
+                <Grid RowDefinitions="Auto,Auto">
+                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,6">
+                        <Label Grid.Column="0" x:Name="DropdownTitle"
+                               Text="Filter"
+                               FontSize="13" FontAttributes="Bold"
+                               TextColor="{StaticResource TextPrimary}" />
+                        <Button Grid.Column="1" Text="Cancel"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource TextSecondary}"
+                                BorderColor="{StaticResource Border}" BorderWidth="1"
+                                CornerRadius="10"
+                                Padding="12,6"
+                                FontSize="12"
+                                MinimumHeightRequest="32"
+                                Clicked="OnDropdownCancelClicked" />
+                    </Grid>
+                    <ScrollView Grid.Row="1" MaximumHeightRequest="240">
+                        <VerticalStackLayout x:Name="DropdownOptions" Spacing="2" />
+                    </ScrollView>
+                </Grid>
+            </Border>
         </Grid>
 
         <!-- Results -->

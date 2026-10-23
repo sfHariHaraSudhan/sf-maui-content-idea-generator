@@ -181,42 +181,82 @@ public partial class IdeaLibraryPage : ContentPage
         };
     }
 
-    // ─────────────────────────── filter buttons ───────────────────────────
+    // ─────────────────────────── filter dropdown ───────────────────────────
+    //
+    // The four filters open an in-page dropdown panel (FilterDropdown).
+    // The earlier FilterSelectionPage modal presented as a native bottom
+    // sheet on Mac Catalyst and its post-pop continuation did not
+    // reliably run, so selections were dropped. In-page selection needs
+    // no navigation, so the button text and list always update.
 
-    private async Task<string?> PickFilterValue(string title, string[] options, string current)
+    private sealed record FilterSpec(string Title, Button Button, string[] Options, ref string Value);
+
+    private readonly List<FilterSpec> _filterSpecs;
+    private FilterSpec? _openFilter;
+
+    private void OnContentTypeFilterClicked(object? sender, EventArgs e) =>
+        ToggleDropdown(new FilterSpec("Content type", ContentTypeFilterButton, ContentTypeOptions, ref _contentType));
+
+    private void OnCategoryFilterClicked(object? sender, EventArgs e) =>
+        ToggleDropdown(new FilterSpec("Category", CategoryFilterButton, _categoryOptions, ref _category));
+
+    private void OnStatusFilterClicked(object? sender, EventArgs e) =>
+        ToggleDropdown(new FilterSpec("Status", StatusFilterButton, StatusOptions, ref _status));
+
+    private void OnPrimaryControlFilterClicked(object? sender, EventArgs e) =>
+        ToggleDropdown(new FilterSpec("Primary control", PrimaryControlFilterButton, _primaryControlOptions, ref _primaryControl));
+
+    private void ToggleDropdown(FilterSpec filter)
     {
-        var selector = new FilterSelectionPage(title, options, current);
-        await Navigation.PushModalAsync(selector);
-        return selector.SelectedValue;
+        if (FilterDropdown.IsVisible && ReferenceEquals(_openFilter?.Button, filter.Button))
+        {
+            CloseDropdown();
+            return;
+        }
+
+        _openFilter = filter;
+        DropdownTitle.Text = filter.Title;
+
+        DropdownOptions.Children.Clear();
+        foreach (var option in filter.Options)
+        {
+            var isActive = string.Equals(option, filter.Value, StringComparison.Ordinal);
+
+            var optionButton = new Button
+            {
+                Text = option,
+                FontSize = 13,
+                TextColor = isActive ? (Color)Resources.PrimaryDark : (Color)Resources.TextPrimary,
+                BackgroundColor = isActive ? (Color)Resources.PrimarySoft : Colors.Transparent,
+                CornerRadius = 10,
+                Padding = new Thickness(12, 8, 12, 8),
+                MinimumHeightRequest = 38,
+            };
+            optionButton.Clicked += (sender, args) =>
+            {
+                if (sender is Button b)
+                {
+                    filter.Value = b.Text;
+                    filter.Button.Text = b.Text;
+                }
+
+                CloseDropdown();
+                Refresh();
+            };
+
+            DropdownOptions.Children.Add(optionButton);
+        }
+
+        FilterDropdown.IsVisible = true;
     }
 
-    private async void OnContentTypeFilterClicked(object? sender, EventArgs e)
+    private void CloseDropdown()
     {
-        _contentType = await PickFilterValue("Content type", ContentTypeOptions, _contentType) ?? _contentType;
-        ContentTypeFilterButton.Text = _contentType;
-        Refresh();
+        FilterDropdown.IsVisible = false;
+        _openFilter = null;
     }
 
-    private async void OnCategoryFilterClicked(object? sender, EventArgs e)
-    {
-        _category = await PickFilterValue("Category", _categoryOptions, _category) ?? _category;
-        CategoryFilterButton.Text = _category;
-        Refresh();
-    }
-
-    private async void OnStatusFilterClicked(object? sender, EventArgs e)
-    {
-        _status = await PickFilterValue("Status", StatusOptions, _status) ?? _status;
-        StatusFilterButton.Text = _status;
-        Refresh();
-    }
-
-    private async void OnPrimaryControlFilterClicked(object? sender, EventArgs e)
-    {
-        _primaryControl = await PickFilterValue("Primary control", _primaryControlOptions, _primaryControl) ?? _primaryControl;
-        PrimaryControlFilterButton.Text = _primaryControl;
-        Refresh();
-    }
+    private void OnDropdownCancelClicked(object? sender, EventArgs e) => CloseDropdown();
 
     private void OnPinnedOnlyToggled(object? sender, ToggledEventArgs e) => Refresh();
 
@@ -234,6 +274,7 @@ public partial class IdeaLibraryPage : ContentPage
         CategoryFilterButton.Text = "All";
         StatusFilterButton.Text = "All";
         PrimaryControlFilterButton.Text = "All";
+        CloseDropdown();
         Refresh();
     }
 
